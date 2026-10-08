@@ -7,8 +7,8 @@
   <title>聽頁 · 中文朗讀</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23314438'/%3E%3Cpath d='M16 18h13c5 0 7 3 7 6v26c-3-4-7-5-20-5zm32 0H35v25c5-2 8-2 13-2z' fill='%23f5f3eb'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./enhancements.css">
-  <script type="module" src="./app.js?v=20261008-1"></script>
+  <link rel="stylesheet" href="./enhancements.css?v=20261008-2">
+  <script type="module" src="./app.js?v=20261008-2"></script>
 </head>
 <body>
   <header class="topbar">
@@ -43,7 +43,7 @@
   </main>
   <section class="player" aria-label="朗讀控制">
     <div class="player-information"><span class="sound-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div><p id="player-chapter">準備好，慢慢聽</p><span id="player-status" role="status" aria-live="polite">請按播放</span></div></div>
-    <div class="transport"><button class="icon-button" id="restart" aria-label="重新朗讀本章" title="重新朗讀本章">↺</button><button class="icon-button" id="previous-segment" aria-label="上一段" title="上一段"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5l-10 7 10 7z"/></svg></button><button class="play-button" id="play" aria-label="開始朗讀"><svg id="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg><svg id="pause-icon" hidden viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></button><button class="icon-button" id="next-segment" aria-label="下一段" title="下一段"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l10 7-10 7z"/></svg></button><button class="icon-button" id="stop" aria-label="停止朗讀，保留本段位置" title="停止朗讀"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1"/></svg></button></div>
+    <div class="transport"><button class="icon-button" id="restart" aria-label="重新朗讀本章" title="重新朗讀本章">↺</button><button class="icon-button" id="previous-segment" aria-label="上一段" title="上一段"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5l-10 7 10 7z"/></svg></button><button class="play-button" id="play" aria-label="開始朗讀" title="開始朗讀"><svg id="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg><svg id="pause-icon" hidden viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/></svg></button><button class="icon-button" id="next-segment" aria-label="下一段" title="下一段"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l10 7-10 7z"/></svg></button><button class="icon-button" id="stop" aria-label="停止朗讀，保留本段位置" title="停止朗讀"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1"/></svg></button></div>
     <div class="player-options"><button id="speed-button" class="speed-button">1.0×</button><button id="voice-button" class="voice-button">選擇語音</button></div>
     <p class="foreground-note">請保持頁面開啟；鎖屏或切換 App 可能中斷朗讀。</p>
   </section>

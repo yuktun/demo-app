@@ -28,6 +28,11 @@
   margin-top: 17px;
 }
 
+.play-button #pause-icon {
+  fill: currentColor;
+  stroke: none;
+}
+
 @media (max-width: 720px) {
   .sidebar {
     height: 100vh;
