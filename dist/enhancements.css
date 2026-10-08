@@ -1,0 +1,41 @@
+.sidebar {
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+}
+
+.book-picker {
+  display: block;
+  margin: 22px 0 4px;
+}
+
+.book-picker > span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .06em;
+}
+
+.book-picker select {
+  min-height: 44px;
+  background-color: var(--white);
+  font-size: 14px;
+  text-overflow: ellipsis;
+}
+
+.book-picker + h1 {
+  margin-top: 17px;
+}
+
+@media (max-width: 720px) {
+  .sidebar {
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    touch-action: pan-y;
+    padding-bottom: max(40px, calc(env(safe-area-inset-bottom) + 24px));
+  }
+}

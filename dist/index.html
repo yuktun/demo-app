@@ -7,6 +7,7 @@
   <title>聽頁 · 中文朗讀</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23314438'/%3E%3Cpath d='M16 18h13c5 0 7 3 7 6v26c-3-4-7-5-20-5zm32 0H35v25c5-2 8-2 13-2z' fill='%23f5f3eb'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./enhancements.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body>
@@ -17,6 +18,7 @@
   <main class="layout">
     <aside class="sidebar" aria-label="章節目錄" id="sidebar">
       <div class="sidebar-top"><span class="eyebrow">我的閱讀</span><button class="plain mobile-only" id="chapters-close" aria-label="關閉章節目錄">✕</button></div>
+      <label class="book-picker" for="book-select"><span id="library-count">書庫</span><select id="book-select" aria-label="選擇書本"></select></label>
       <h1 id="book-title">雨到窗前</h1>
       <p class="book-meta" id="book-meta">原創短篇示範</p>
       <div class="book-progress"><span id="overall-progress">0%</span><span>全書進度</span><div class="progress-track"><div id="progress-fill"></div></div></div>
@@ -53,7 +55,7 @@
     <div class="or-divider"><span>或貼上文字</span></div>
     <label class="field-label" for="paste-title">書名</label><input id="paste-title" type="text" maxlength="120" placeholder="為這本書取個名字">
     <label class="field-label" for="paste-text">內容</label><textarea id="paste-text" rows="5" placeholder="第一章　故事的開始&#10;&#10;把想聽的文字貼在這裏……"></textarea>
-    <p class="inline-error" id="import-error" role="alert" hidden></p><p class="small-note">新書會取代目前這本書。請自行保留原始檔案。</p><button class="primary-button" id="import-paste">開始閱讀</button><button class="text-button sample-button" id="load-sample">試讀原創短篇示範</button>
+    <p class="inline-error" id="import-error" role="alert" hidden></p><p class="small-note">新書會加入「我的閱讀」，可隨時切換。請自行保留原始檔案。</p><button class="primary-button" id="import-paste">加入並開始閱讀</button><button class="text-button sample-button" id="load-sample">試讀原創短篇示範</button>
   </dialog>
   <dialog id="settings-dialog"><div class="dialog-heading"><div><span class="eyebrow">按自己的節奏</span><h2>語音與閱讀</h2></div><button class="plain close-dialog" aria-label="關閉">✕</button></div>
     <label class="field-label" for="voice-select">裝置上的中文語音</label><select id="voice-select"><option>正在尋找語音……</option></select><p class="small-note" id="voice-help">只使用瀏覽器標示為本機的中文語音。</p><div class="voice-actions"><button class="secondary-button" id="preview-voice">試聽語音</button><button class="text-button" id="refresh-voices">重新尋找</button></div>

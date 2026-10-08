@@ -30,7 +30,7 @@ This artifact is independent. Do not read or depend on existing application data
 - Chinese numbered chapter headings, English `Chapter N`, and common preface/epilogue headings.
 - Foreground continuous speech across segments and chapters, with play, pause, stop, previous/next segment, chapter restart, speed, local Chinese voice choice and preview.
 - Segment highlighting, optional auto-follow, font size control, responsive mobile chapter drawer.
-- Book in IndexedDB; reading position/preferences in localStorage. One current book per browser.
+- Multiple books in IndexedDB; each book's reading position and preferences in localStorage. A book picker in the chapter drawer switches between saved books.
 - Browser voices are allowed only when `localService === true` and the language is Chinese/Cantonese. No remote voice option or silent remote fallback.
 - Speech callbacks and timers are guarded by a generation and current utterance identity. Cancels never advance reading. A stalled utterance pauses for manual retry.
 - The page pauses when hidden. It does not promise lock-screen, background or offline playback.
@@ -57,4 +57,4 @@ No actual iPhone, browser speech engine, DOM visual rendering, or WebMCP runtime
 
 ## Limits
 
-20 MB per imported file and 8 million characters per book. A large book may take a moment to parse. Only the current book is stored. Clearing browser data, storage eviction or private mode can remove it. Voice availability and speech quality depend on the operating system/browser; browser-labelled local voices are not an independent audit of the OS speech engine. Native speech word boundaries are inconsistent; resume may repeat part of a segment. No copyrighted novel is bundled.
+20 MB per imported file and 8 million characters per book. Large books may take a moment to parse and the total library is limited by browser storage. Clearing browser data, storage eviction or private mode can remove it. Voice availability and speech quality depend on the operating system/browser; browser-labelled local voices are not an independent audit of the OS speech engine. Native speech word boundaries are inconsistent; resume may repeat part of a segment. No copyrighted novel is bundled.
