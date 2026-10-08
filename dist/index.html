@@ -7,8 +7,8 @@
   <title>聽頁 · 中文朗讀</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23314438'/%3E%3Cpath d='M16 18h13c5 0 7 3 7 6v26c-3-4-7-5-20-5zm32 0H35v25c5-2 8-2 13-2z' fill='%23f5f3eb'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./enhancements.css?v=20261008-2">
-  <script type="module" src="./app.js?v=20261008-2"></script>
+  <link rel="stylesheet" href="./enhancements.css?v=20261008-3">
+  <script type="module" src="./app.js?v=20261008-3"></script>
 </head>
 <body>
   <header class="topbar">
@@ -19,6 +19,7 @@
     <aside class="sidebar" aria-label="章節目錄" id="sidebar">
       <div class="sidebar-top"><span class="eyebrow">我的閱讀</span><button class="plain mobile-only" id="chapters-close" aria-label="關閉章節目錄">✕</button></div>
       <label class="book-picker" for="book-select"><span id="library-count">書庫</span><select id="book-select" aria-label="選擇書本"></select></label>
+      <div class="book-actions"><button class="text-button danger-button" id="delete-book" hidden>刪除這本書</button></div>
       <h1 id="book-title">雨到窗前</h1>
       <p class="book-meta" id="book-meta">原創短篇示範</p>
       <div class="book-progress"><span id="overall-progress">0%</span><span>全書進度</span><div class="progress-track"><div id="progress-fill"></div></div></div>
@@ -63,6 +64,7 @@
     <label class="field-label" for="font-size">文字大小 <strong id="font-label">22 px</strong></label><input type="range" id="font-size" min="18" max="32" step="1" value="22">
     <label class="check-label"><input type="checkbox" id="auto-follow" checked><span>閱讀畫面跟隨朗讀位置</span></label><div class="privacy-box">語音是否可用取決於你的裝置和瀏覽器。只列出瀏覽器標示為本機的中文語音，不會自動改用網上語音。如沒有語音，可在 iPhone「設定 → 輔助使用」的朗讀／閱讀語音選項下載中文語音，再重新開啟頁面；瀏覽器未必會提供所有已下載語音。</div>
   </dialog>
+  <dialog id="delete-dialog"><div class="dialog-heading"><div><span class="eyebrow">從我的閱讀移除</span><h2>刪除書本？</h2></div><button class="plain close-dialog" aria-label="關閉">✕</button></div><p class="muted">確定刪除《<span id="delete-book-title"></span>》？這會同時移除儲存在此瀏覽器的書本內容及閱讀進度，無法復原。</p><p class="inline-error" id="delete-error" role="alert" hidden></p><div class="dialog-actions"><button class="secondary-button close-dialog" type="button">取消</button><button class="primary-button danger-primary" id="confirm-delete" type="button">確認刪除</button></div></dialog>
   <dialog id="about-dialog"><div class="dialog-heading"><h2>安心讀，記得留底。</h2><button class="plain close-dialog" aria-label="關閉">✕</button></div><div class="about-copy"><h3>留在這個瀏覽器</h3><p>匯入的書本儲存在本機瀏覽器資料庫，閱讀位置和設定也保留在這裏。本頁不會把你匯入或貼上的文字上傳至伺服器，亦沒有分析追蹤。</p><h3>不是備份，也不會同步</h3><p>另一部裝置或另一個瀏覽器不會有同一本書。清除瀏覽資料、私人瀏覽模式或儲存空間不足，都可能令記錄消失。請保留你的原始檔案。</p><h3>前景朗讀</h3><p>本頁使用瀏覽器提供的中文語音，只啟用其標示為本機的語音。請保持頁面開啟。鎖屏、切換 App 或來電可能中斷；回來後按播放繼續，可能重讀少量文字。不保證離線或背景播放。</p><h3>文字檔支援</h3><p>支援 TXT 和純文字 Markdown，可辨認「第一章」「第 12 回」等常見章節標題。PDF、EPUB、Word 檔案暫未支援，請先轉成純文字。</p></div></dialog>
   <noscript><p class="noscript">請開啟 JavaScript 以使用匯入及朗讀功能。</p></noscript>
 </body></html>

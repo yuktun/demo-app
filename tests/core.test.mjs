@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {parseBook,splitSegments,clampPosition,nextPosition,bookProgress,chooseVoice,localChineseVoices,SpeechPlayer,SAMPLE} from '../dist/core.js';
+import {parseBook,splitSegments,clampPosition,nextPosition,bookProgress,storedBookMatches,chooseVoice,localChineseVoices,SpeechPlayer,SAMPLE} from '../dist/core.js';
 const local={name:'Chinese local',voiceURI:'local-zh',lang:'zh-HK',localService:true};
 function fixture(text='第一章 開始\n甲乙。\n丙丁。\n第二章 結尾\n最後一段。'){
  const utterances=[];const timers=new Map();let timerId=0;const errors=[];let voice=local;
@@ -25,3 +25,4 @@ test('watchdog preserves location, requires manual retry and clears timeout',()=
 test('stop before final onend does not finish and subsequent play restarts segment',()=>{const f=fixture('只有一段');f.player.play();const old=f.utterances[0];f.player.stop();old.onend();assert.equal(f.player.state,'idle');f.player.play();assert.equal(f.utterances[1].text,'只有一段');});
 test('ended book restarts only on explicit Play',()=>{const f=fixture('只有一段');f.player.play();f.utterances[0].onend();assert.equal(f.player.state,'ended');f.player.play();assert.equal(f.utterances.length,2);assert.equal(f.player.pos.segment,0);});
 test('browser timers are called without the player as their receiver',()=>{let timerThis='unset';let clearThis='unset';const synth={cancel(){},speak(){}};const player=new SpeechPlayer({synth,Utterance:class{constructor(text){this.text=text;}},getVoice:()=>local,getRate:()=>1,setTimer:function(){timerThis=this;return 7;},clearTimer:function(){clearThis=this;}});player.load(parseBook('測試播放'));player.play();assert.equal(timerThis,undefined);player.stop();assert.equal(clearThis,undefined);});
+test('stored book deletion matches current and legacy IndexedDB keys',()=>{const id='book-123';assert.equal(storedBookMatches(id,id,{id}),true);assert.equal(storedBookMatches(id,'current',{id}),true);assert.equal(storedBookMatches(id,'current',{id:'book-456'}),false);assert.equal(storedBookMatches(id,'other',null),false);});

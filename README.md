@@ -30,7 +30,7 @@ This artifact is independent. Do not read or depend on existing application data
 - Chinese numbered chapter headings, English `Chapter N`, and common preface/epilogue headings.
 - Foreground continuous speech across segments and chapters, with play, pause, stop, previous/next segment, chapter restart, speed, local Chinese voice choice and preview.
 - Segment highlighting, optional auto-follow, font size control, responsive mobile chapter drawer.
-- Multiple books in IndexedDB; each book's reading position and preferences in localStorage. A book picker in the chapter drawer switches between saved books.
+- Multiple books in IndexedDB; each book's reading position and preferences in localStorage. A book picker in the chapter drawer switches between saved books, and imported books can be deleted locally.
 - Browser voices are allowed only when `localService === true` and the language is Chinese/Cantonese. No remote voice option or silent remote fallback.
 - Speech callbacks and timers are guarded by a generation and current utterance identity. Cancels never advance reading. A stalled utterance pauses for manual retry.
 - The page pauses when hidden. It does not promise lock-screen, background or offline playback.

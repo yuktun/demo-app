@@ -79,6 +79,9 @@ export function bookProgress(book,pos,ended=false) {
   if(ended) return 100;
   return Math.round(100*(book.chapters.slice(0,pos.chapter).reduce((n,ch)=>n+ch.segments.length,0)+pos.segment)/book.count);
 }
+export function storedBookMatches(id,key,value) {
+  return key===id || (value!==null&&typeof value==='object'&&value.id===id);
+}
 export function localChineseVoices(voices) {
   return voices.filter(v=>v.localService===true && /^(zh|yue|cmn)([-_]|$)/i.test(v.lang));
 }
