@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5f3eb"><meta name="description" content="在自己的裝置，慢慢讀，靜靜聽。中文文字書朗讀器。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>聽頁 · 中文朗讀</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23314438'/%3E%3Cpath d='M16 18h13c5 0 7 3 7 6v26c-3-4-7-5-20-5zm32 0H35v25c5-2 8-2 13-2z' fill='%23f5f3eb'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="聽頁首頁"><span class="brand-mark" aria-hidden="true">聽</span><span>聽頁<small>一頁，一段，一個故事。</small></span></a>
+    <div class="top-actions"><button class="plain mobile-only" id="chapters-toggle" aria-label="開啟章節目錄">☷ <span>目錄</span></button><button class="import-button" id="open-import"><span aria-hidden="true">＋</span> 匯入書本</button></div>
+  </header>
+  <main class="layout">
+    <aside class="sidebar" aria-label="章節目錄" id="sidebar">
+      <div class="sidebar-top"><span class="eyebrow">我的閱讀</span><button class="plain mobile-only" id="chapters-close" aria-label="關閉章節目錄">✕</button></div>
+      <h1 id="book-title">雨到窗前</h1>
+      <p class="book-meta" id="book-meta">原創短篇示範</p>
+      <div class="book-progress"><span id="overall-progress">0%</span><span>全書進度</span><div class="progress-track"><div id="progress-fill"></div></div></div>
+      <div class="chapters-label">章節 <span id="chapter-count"></span></div>
+      <nav id="chapter-list" aria-label="選擇章節"></nav>
+      <div class="device-note"><span class="device-dot" aria-hidden="true"></span><span id="storage-status">只儲存在這個瀏覽器</span></div>
+      <button class="text-button about-open">儲存與朗讀說明 <span aria-hidden="true">↗</span></button>
+    </aside>
+    <div id="sidebar-backdrop" hidden></div>
+    <section class="reading-shell" aria-label="閱讀區">
+      <div class="reading-topline"><span id="chapter-number">第一章</span><div class="reading-tools"><button class="plain" id="font-down" aria-label="縮小字體">A−</button><button class="plain" id="font-up" aria-label="放大字體">A＋</button><button class="plain" id="open-settings" aria-label="語音與閱讀設定">☷ <span>設定</span></button></div></div>
+      <article class="paper">
+        <p class="chapter-kicker" id="chapter-kicker">01 / 03</p>
+        <h2 id="chapter-title">雨到窗前</h2>
+        <p class="reading-hint">輕按文字，從那一段繼續。</p>
+        <button id="earlier-text" class="text-button page-text" hidden>↑ 顯示前面的文字</button>
+        <div class="prose" id="reading-text"></div>
+        <button id="later-text" class="text-button page-text" hidden>顯示後面的文字 ↓</button>
+        <div class="chapter-bottom"><button id="previous-chapter" class="text-button">← 上一章</button><span aria-hidden="true">✦</span><button id="next-chapter" class="text-button">下一章 →</button></div>
+      </article>
+    </section>
+  </main>
+  <section class="player" aria-label="朗讀控制">
+    <div class="player-information"><span class="sound-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div><p id="player-chapter">準備好，慢慢聽</p><span id="player-status" role="status" aria-live="polite">請按播放</span></div></div>
+    <div class="transport"><button class="icon-button" id="restart" aria-label="重新朗讀本章" title="重新朗讀本章">↺</button><button class="icon-button" id="previous-segment" aria-label="上一段" title="上一段"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5l-10 7 10 7z"/></svg></button><button class="play-button" id="play" aria-label="開始朗讀"><svg id="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg><svg id="pause-icon" hidden viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></button><button class="icon-button" id="next-segment" aria-label="下一段" title="下一段"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l10 7-10 7z"/></svg></button><button class="icon-button" id="stop" aria-label="停止朗讀，保留本段位置" title="停止朗讀"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1"/></svg></button></div>
+    <div class="player-options"><button id="speed-button" class="speed-button">1.0×</button><button id="voice-button" class="voice-button">選擇語音</button></div>
+    <p class="foreground-note">請保持頁面開啟；鎖屏或切換 App 可能中斷朗讀。</p>
+  </section>
+  <div id="notice" class="notice" role="status" hidden></div>
+  <dialog id="import-dialog"><div class="dialog-heading"><div><span class="eyebrow">打開一個故事</span><h2>匯入書本</h2></div><button class="plain close-dialog" aria-label="關閉">✕</button></div>
+    <p class="muted">選擇 TXT／純文字 Markdown，或直接貼上文字。內容不會上傳至伺服器。</p>
+    <label class="file-drop" for="book-file"><span class="upload-symbol" aria-hidden="true">↥</span><strong>選擇文字檔案</strong><span>TXT、MD · 最大 20 MB</span></label><input id="book-file" type="file" accept=".txt,.md,text/plain,text/markdown" hidden>
+    <label class="field-label" for="encoding">檔案編碼 <span>出現亂碼時可更改</span></label><select id="encoding"><option value="utf-8">UTF-8（建議）</option><option value="big5">Big5（繁體中文）</option><option value="gb18030">GB18030／GBK（簡體中文）</option></select>
+    <div class="or-divider"><span>或貼上文字</span></div>
+    <label class="field-label" for="paste-title">書名</label><input id="paste-title" type="text" maxlength="120" placeholder="為這本書取個名字">
+    <label class="field-label" for="paste-text">內容</label><textarea id="paste-text" rows="5" placeholder="第一章　故事的開始&#10;&#10;把想聽的文字貼在這裏……"></textarea>
+    <p class="inline-error" id="import-error" role="alert" hidden></p><p class="small-note">新書會取代目前這本書。請自行保留原始檔案。</p><button class="primary-button" id="import-paste">開始閱讀</button><button class="text-button sample-button" id="load-sample">試讀原創短篇示範</button>
+  </dialog>
+  <dialog id="settings-dialog"><div class="dialog-heading"><div><span class="eyebrow">按自己的節奏</span><h2>語音與閱讀</h2></div><button class="plain close-dialog" aria-label="關閉">✕</button></div>
+    <label class="field-label" for="voice-select">裝置上的中文語音</label><select id="voice-select"><option>正在尋找語音……</option></select><p class="small-note" id="voice-help">只使用瀏覽器標示為本機的中文語音。</p><div class="voice-actions"><button class="secondary-button" id="preview-voice">試聽語音</button><button class="text-button" id="refresh-voices">重新尋找</button></div>
+    <label class="field-label" for="rate">朗讀速度 <strong id="rate-label">1.0×</strong></label><input type="range" id="rate" min="0.5" max="2" step="0.1" value="1"><div class="range-labels"><span>0.5× 慢一點</span><span>2.0× 快一點</span></div>
+    <label class="field-label" for="font-size">文字大小 <strong id="font-label">22 px</strong></label><input type="range" id="font-size" min="18" max="32" step="1" value="22">
+    <label class="check-label"><input type="checkbox" id="auto-follow" checked><span>閱讀畫面跟隨朗讀位置</span></label><div class="privacy-box">語音是否可用取決於你的裝置和瀏覽器。只列出瀏覽器標示為本機的中文語音，不會自動改用網上語音。如沒有語音，可在 iPhone「設定 → 輔助使用」的朗讀／閱讀語音選項下載中文語音，再重新開啟頁面；瀏覽器未必會提供所有已下載語音。</div>
+  </dialog>
+  <dialog id="about-dialog"><div class="dialog-heading"><h2>安心讀，記得留底。</h2><button class="plain close-dialog" aria-label="關閉">✕</button></div><div class="about-copy"><h3>留在這個瀏覽器</h3><p>匯入的書本儲存在本機瀏覽器資料庫，閱讀位置和設定也保留在這裏。本頁不會把你匯入或貼上的文字上傳至伺服器，亦沒有分析追蹤。</p><h3>不是備份，也不會同步</h3><p>另一部裝置或另一個瀏覽器不會有同一本書。清除瀏覽資料、私人瀏覽模式或儲存空間不足，都可能令記錄消失。請保留你的原始檔案。</p><h3>前景朗讀</h3><p>本頁使用瀏覽器提供的中文語音，只啟用其標示為本機的語音。請保持頁面開啟。鎖屏、切換 App 或來電可能中斷；回來後按播放繼續，可能重讀少量文字。不保證離線或背景播放。</p><h3>文字檔支援</h3><p>支援 TXT 和純文字 Markdown，可辨認「第一章」「第 12 回」等常見章節標題。PDF、EPUB、Word 檔案暫未支援，請先轉成純文字。</p></div></dialog>
+  <noscript><p class="noscript">請開啟 JavaScript 以使用匯入及朗讀功能。</p></noscript>
+</body></html>
