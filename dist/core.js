@@ -88,7 +88,11 @@ export function chooseVoice(voices,saved='') {
 }
 export class SpeechPlayer {
   constructor({synth,Utterance,getVoice,getRate,onChange=()=>{},onPosition=()=>{},onError=()=>{},setTimer=setTimeout,clearTimer=clearTimeout}) {
-    Object.assign(this,{synth,Utterance,getVoice,getRate,onChange,onPosition,onError,setTimer,clearTimer});
+    Object.assign(this,{synth,Utterance,getVoice,getRate,onChange,onPosition,onError});
+    // Browser timer functions throw an "Illegal invocation" error when called
+    // as methods of another object. Keep their receiver neutral.
+    this.setTimer=(...args)=>setTimer(...args);
+    this.clearTimer=(...args)=>clearTimer(...args);
     this.epoch=0;this.state='idle';this.current=null;this.timer=null;this.boundary=0;this.resumeOffset=0;this.book=null;this.pos={chapter:0,segment:0};
   }
   emit(state) { this.state=state;this.onChange(state); }
