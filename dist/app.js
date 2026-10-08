@@ -1,4 +1,4 @@
-import { SAMPLE, parseBook, bookProgress, localChineseVoices, chooseVoice, SpeechPlayer } from './core.js';
+import { SAMPLE, parseBook, bookProgress, localChineseVoices, chooseVoice, SpeechPlayer } from './core.js?v=20261008-1';
 const $=id=>document.getElementById(id);
 const KEY='tingye-reader-v1';
 let saved={};let storageOkay=true;let database=null;let bookIsSaved=true;let importing=false;
