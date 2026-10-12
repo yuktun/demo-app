@@ -1,0 +1,622 @@
+{
+  "AEL": [
+    {
+      "stop": "AWE",
+      "name": "博覽館",
+      "en": "AsiaWorld-Expo"
+    },
+    {
+      "stop": "AIR",
+      "name": "機場",
+      "en": "Airport"
+    },
+    {
+      "stop": "TSY",
+      "name": "青衣",
+      "en": "Tsing Yi"
+    },
+    {
+      "stop": "KOW",
+      "name": "九龍",
+      "en": "Kowloon"
+    },
+    {
+      "stop": "HOK",
+      "name": "香港",
+      "en": "Hong Kong"
+    }
+  ],
+  "DRL": [
+    {
+      "stop": "SUN",
+      "name": "欣澳",
+      "en": "Sunny Bay"
+    },
+    {
+      "stop": "DIS",
+      "name": "迪士尼",
+      "en": "Disneyland Resort"
+    }
+  ],
+  "EAL": [
+    {
+      "stop": "LOW",
+      "name": "羅湖",
+      "en": "Lo Wu"
+    },
+    {
+      "stop": "SHS",
+      "name": "上水",
+      "en": "Sheung Shui"
+    },
+    {
+      "stop": "FAN",
+      "name": "粉嶺",
+      "en": "Fanling"
+    },
+    {
+      "stop": "TWO",
+      "name": "太和",
+      "en": "Tai Wo"
+    },
+    {
+      "stop": "TAP",
+      "name": "大埔墟",
+      "en": "Tai Po Market"
+    },
+    {
+      "stop": "UNI",
+      "name": "大學",
+      "en": "University"
+    },
+    {
+      "stop": "FOT",
+      "name": "火炭",
+      "en": "Fo Tan"
+    },
+    {
+      "stop": "SHT",
+      "name": "沙田",
+      "en": "Sha Tin"
+    },
+    {
+      "stop": "TAW",
+      "name": "大圍",
+      "en": "Tai Wai"
+    },
+    {
+      "stop": "KOT",
+      "name": "九龍塘",
+      "en": "Kowloon Tong"
+    },
+    {
+      "stop": "MKK",
+      "name": "旺角東",
+      "en": "Mong Kok East"
+    },
+    {
+      "stop": "HUH",
+      "name": "紅磡",
+      "en": "Hung Hom"
+    },
+    {
+      "stop": "EXC",
+      "name": "會展",
+      "en": "Exhibition Centre"
+    },
+    {
+      "stop": "ADM",
+      "name": "金鐘",
+      "en": "Admiralty"
+    },
+    {
+      "stop": "LMC",
+      "name": "落馬洲",
+      "en": "Lok Ma Chau"
+    }
+  ],
+  "ISL": [
+    {
+      "stop": "CHW",
+      "name": "柴灣",
+      "en": "Chai Wan"
+    },
+    {
+      "stop": "HFC",
+      "name": "杏花邨",
+      "en": "Heng Fa Chuen"
+    },
+    {
+      "stop": "SKW",
+      "name": "筲箕灣",
+      "en": "Shau Kei Wan"
+    },
+    {
+      "stop": "SWH",
+      "name": "西灣河",
+      "en": "Sai Wan Ho"
+    },
+    {
+      "stop": "TAK",
+      "name": "太古",
+      "en": "Tai Koo"
+    },
+    {
+      "stop": "QUB",
+      "name": "鰂魚涌",
+      "en": "Quarry Bay"
+    },
+    {
+      "stop": "NOP",
+      "name": "北角",
+      "en": "North Point"
+    },
+    {
+      "stop": "FOH",
+      "name": "炮台山",
+      "en": "Fortress Hill"
+    },
+    {
+      "stop": "TIH",
+      "name": "天后",
+      "en": "Tin Hau"
+    },
+    {
+      "stop": "CAB",
+      "name": "銅鑼灣",
+      "en": "Causeway Bay"
+    },
+    {
+      "stop": "WAC",
+      "name": "灣仔",
+      "en": "Wan Chai"
+    },
+    {
+      "stop": "ADM",
+      "name": "金鐘",
+      "en": "Admiralty"
+    },
+    {
+      "stop": "CEN",
+      "name": "中環",
+      "en": "Central"
+    },
+    {
+      "stop": "SHW",
+      "name": "上環",
+      "en": "Sheung Wan"
+    },
+    {
+      "stop": "SYP",
+      "name": "西營盤",
+      "en": "Sai Ying Pun"
+    },
+    {
+      "stop": "HKU",
+      "name": "香港大學",
+      "en": "HKU"
+    },
+    {
+      "stop": "KET",
+      "name": "堅尼地城",
+      "en": "Kennedy Town"
+    }
+  ],
+  "KTL": [
+    {
+      "stop": "TIK",
+      "name": "調景嶺",
+      "en": "Tiu Keng Leng"
+    },
+    {
+      "stop": "YAT",
+      "name": "油塘",
+      "en": "Yau Tong"
+    },
+    {
+      "stop": "LAT",
+      "name": "藍田",
+      "en": "Lam Tin"
+    },
+    {
+      "stop": "KWT",
+      "name": "觀塘",
+      "en": "Kwun Tong"
+    },
+    {
+      "stop": "NTK",
+      "name": "牛頭角",
+      "en": "Ngau Tau Kok"
+    },
+    {
+      "stop": "KOB",
+      "name": "九龍灣",
+      "en": "Kowloon Bay"
+    },
+    {
+      "stop": "CHH",
+      "name": "彩虹",
+      "en": "Choi Hung"
+    },
+    {
+      "stop": "DIH",
+      "name": "鑽石山",
+      "en": "Diamond Hill"
+    },
+    {
+      "stop": "WTS",
+      "name": "黃大仙",
+      "en": "Wong Tai Sin"
+    },
+    {
+      "stop": "LOF",
+      "name": "樂富",
+      "en": "Lok Fu"
+    },
+    {
+      "stop": "KOT",
+      "name": "九龍塘",
+      "en": "Kowloon Tong"
+    },
+    {
+      "stop": "SKM",
+      "name": "石硤尾",
+      "en": "Shek Kip Mei"
+    },
+    {
+      "stop": "PRE",
+      "name": "太子",
+      "en": "Prince Edward"
+    },
+    {
+      "stop": "MOK",
+      "name": "旺角",
+      "en": "Mong Kok"
+    },
+    {
+      "stop": "YMT",
+      "name": "油麻地",
+      "en": "Yau Ma Tei"
+    },
+    {
+      "stop": "HOM",
+      "name": "何文田",
+      "en": "Ho Man Tin"
+    },
+    {
+      "stop": "WHA",
+      "name": "黃埔",
+      "en": "Whampoa"
+    }
+  ],
+  "TML": [
+    {
+      "stop": "WKS",
+      "name": "烏溪沙",
+      "en": "Wu Kai Sha"
+    },
+    {
+      "stop": "MOS",
+      "name": "馬鞍山",
+      "en": "Ma On Shan"
+    },
+    {
+      "stop": "HEO",
+      "name": "恆安",
+      "en": "Heng On"
+    },
+    {
+      "stop": "TSH",
+      "name": "大水坑",
+      "en": "Tai Shui Hang"
+    },
+    {
+      "stop": "SHM",
+      "name": "石門",
+      "en": "Shek Mun"
+    },
+    {
+      "stop": "CIO",
+      "name": "第一城",
+      "en": "City One"
+    },
+    {
+      "stop": "STW",
+      "name": "沙田圍",
+      "en": "Sha Tin Wai"
+    },
+    {
+      "stop": "CKT",
+      "name": "車公廟",
+      "en": "Che Kung Temple"
+    },
+    {
+      "stop": "TAW",
+      "name": "大圍",
+      "en": "Tai Wai"
+    },
+    {
+      "stop": "HIK",
+      "name": "顯徑",
+      "en": "Hin Keng"
+    },
+    {
+      "stop": "DIH",
+      "name": "鑽石山",
+      "en": "Diamond Hill"
+    },
+    {
+      "stop": "KAT",
+      "name": "啟德",
+      "en": "Kai Tak"
+    },
+    {
+      "stop": "SUW",
+      "name": "宋皇臺",
+      "en": "Sung Wong Toi"
+    },
+    {
+      "stop": "TKW",
+      "name": "土瓜灣",
+      "en": "To Kwa Wan"
+    },
+    {
+      "stop": "HOM",
+      "name": "何文田",
+      "en": "Ho Man Tin"
+    },
+    {
+      "stop": "HUH",
+      "name": "紅磡",
+      "en": "Hung Hom"
+    },
+    {
+      "stop": "ETS",
+      "name": "尖東",
+      "en": "East Tsim Sha Tsui"
+    },
+    {
+      "stop": "AUS",
+      "name": "柯士甸",
+      "en": "Austin"
+    },
+    {
+      "stop": "NAC",
+      "name": "南昌",
+      "en": "Nam Cheong"
+    },
+    {
+      "stop": "MEF",
+      "name": "美孚",
+      "en": "Mei Foo"
+    },
+    {
+      "stop": "TWW",
+      "name": "荃灣西",
+      "en": "Tsuen Wan West"
+    },
+    {
+      "stop": "KSR",
+      "name": "錦上路",
+      "en": "Kam Sheung Road"
+    },
+    {
+      "stop": "YUL",
+      "name": "元朗",
+      "en": "Yuen Long"
+    },
+    {
+      "stop": "LOP",
+      "name": "朗屏",
+      "en": "Long Ping"
+    },
+    {
+      "stop": "TIS",
+      "name": "天水圍",
+      "en": "Tin Shui Wai"
+    },
+    {
+      "stop": "SIH",
+      "name": "兆康",
+      "en": "Siu Hong"
+    },
+    {
+      "stop": "TUM",
+      "name": "屯門",
+      "en": "Tuen Mun"
+    }
+  ],
+  "TCL": [
+    {
+      "stop": "TUC",
+      "name": "東涌",
+      "en": "Tung Chung"
+    },
+    {
+      "stop": "SUN",
+      "name": "欣澳",
+      "en": "Sunny Bay"
+    },
+    {
+      "stop": "TSY",
+      "name": "青衣",
+      "en": "Tsing Yi"
+    },
+    {
+      "stop": "LAK",
+      "name": "茘景",
+      "en": "Lai King"
+    },
+    {
+      "stop": "NAC",
+      "name": "南昌",
+      "en": "Nam Cheong"
+    },
+    {
+      "stop": "OLY",
+      "name": "奧運",
+      "en": "Olympic"
+    },
+    {
+      "stop": "KOW",
+      "name": "九龍",
+      "en": "Kowloon"
+    },
+    {
+      "stop": "HOK",
+      "name": "香港",
+      "en": "Hong Kong"
+    }
+  ],
+  "TKL": [
+    {
+      "stop": "POA",
+      "name": "寶琳",
+      "en": "Po Lam"
+    },
+    {
+      "stop": "HAH",
+      "name": "坑口",
+      "en": "Hang Hau"
+    },
+    {
+      "stop": "TKO",
+      "name": "將軍澳",
+      "en": "Tseung Kwan O"
+    },
+    {
+      "stop": "TIK",
+      "name": "調景嶺",
+      "en": "Tiu Keng Leng"
+    },
+    {
+      "stop": "YAT",
+      "name": "油塘",
+      "en": "Yau Tong"
+    },
+    {
+      "stop": "QUB",
+      "name": "鰂魚涌",
+      "en": "Quarry Bay"
+    },
+    {
+      "stop": "NOP",
+      "name": "北角",
+      "en": "North Point"
+    },
+    {
+      "stop": "LHP",
+      "name": "康城",
+      "en": "LOHAS Park"
+    }
+  ],
+  "TWL": [
+    {
+      "stop": "TSW",
+      "name": "荃灣",
+      "en": "Tsuen Wan"
+    },
+    {
+      "stop": "TWH",
+      "name": "大窩口",
+      "en": "Tai Wo Hau"
+    },
+    {
+      "stop": "KWH",
+      "name": "葵興",
+      "en": "Kwai Hing"
+    },
+    {
+      "stop": "KWF",
+      "name": "葵芳",
+      "en": "Kwai Fong"
+    },
+    {
+      "stop": "LAK",
+      "name": "茘景",
+      "en": "Lai King"
+    },
+    {
+      "stop": "MEF",
+      "name": "美孚",
+      "en": "Mei Foo"
+    },
+    {
+      "stop": "LCK",
+      "name": "茘枝角",
+      "en": "Lai Chi Kok"
+    },
+    {
+      "stop": "CSW",
+      "name": "長沙灣",
+      "en": "Cheung Sha Wan"
+    },
+    {
+      "stop": "SSP",
+      "name": "深水埗",
+      "en": "Sham Shui Po"
+    },
+    {
+      "stop": "PRE",
+      "name": "太子",
+      "en": "Prince Edward"
+    },
+    {
+      "stop": "MOK",
+      "name": "旺角",
+      "en": "Mong Kok"
+    },
+    {
+      "stop": "YMT",
+      "name": "油麻地",
+      "en": "Yau Ma Tei"
+    },
+    {
+      "stop": "JOR",
+      "name": "佐敦",
+      "en": "Jordan"
+    },
+    {
+      "stop": "TST",
+      "name": "尖沙咀",
+      "en": "Tsim Sha Tsui"
+    },
+    {
+      "stop": "ADM",
+      "name": "金鐘",
+      "en": "Admiralty"
+    },
+    {
+      "stop": "CEN",
+      "name": "中環",
+      "en": "Central"
+    }
+  ],
+  "SIL": [
+    {
+      "stop": "ADM",
+      "name": "金鐘",
+      "en": "Admiralty"
+    },
+    {
+      "stop": "OCP",
+      "name": "海洋公園",
+      "en": "Ocean Park"
+    },
+    {
+      "stop": "WCH",
+      "name": "黃竹坑",
+      "en": "Wong Chuk Hang"
+    },
+    {
+      "stop": "LET",
+      "name": "利東",
+      "en": "Lei Tung"
+    },
+    {
+      "stop": "SOH",
+      "name": "海怡半島",
+      "en": "South Horizons"
+    }
+  ]
+}

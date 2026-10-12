@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#123f40"><meta name="description" content="香港巴士、小巴和港鐵到站預報；收藏你的日常路線。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://data.etabus.gov.hk https://rt.data.gov.hk https://data.etagmb.gov.hk; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>搭下一班 · 香港到站</title>
+  <link rel="stylesheet" href="./styles.css"><script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="./"><span class="logo" aria-hidden="true">↗</span><span>搭下一班<small>香港公共交通到站預報</small></span></a><button id="theme" class="icon-button" aria-label="切換深色或淺色主題">◐</button></header>
+  <main>
+    <section id="home-view" class="view">
+      <div class="eyebrow">YOUR DAILY CONNECTIONS</div><div class="heading"><h1>日常出發，<br>心裡有數。</h1><button id="refresh" class="button secondary">↻ 刷新全部</button></div>
+      <div class="status-line"><span class="status-dot"></span><span id="connection">連線中</span><span id="next-refresh"></span></div>
+      <div id="boards"></div>
+      <div id="empty" class="empty"><span class="empty-icon" aria-hidden="true">↗</span><h2>下一班，由你選擇</h2><p>選一條路線、一個上車站，<br>把每日常搭的班次放在這裡。</p><button id="first-add" class="button">＋ 新增收藏</button></div>
+      <p class="footnote">預計到站可能變動，請以現場及營運商公告為準。<br>只顯示官方預報，不自行推算班次。</p>
+    </section>
+    <section id="search-view" class="view" hidden>
+      <div class="eyebrow">FIND YOUR NEXT RIDE</div><h1>找到你的路線</h1><p class="intro">選擇營運商，再選方向與上車站。</p>
+      <div id="operators" class="segmented" aria-label="營運商"></div>
+      <form id="route-form" class="search-form"><label id="region-label" hidden>小巴地區<select id="region"><option value="HKI">香港島</option><option value="KLN">九龍</option><option value="NT">新界</option></select></label><label id="line-label" hidden>港鐵路線<select id="line"></select></label><label class="grow"><span id="query-label">路線號碼 / 目的地</span><input id="query" type="search" placeholder="例如 1A、旺角" autocomplete="off" maxlength="80"></label><button type="submit" class="button">搜尋</button></form>
+      <p id="search-status" class="hint" role="status"></p><div id="results" class="results"></div>
+      <section id="picker" class="panel" hidden><div class="panel-heading"><h2 id="picker-title"></h2><button id="picker-close" class="icon-button" aria-label="關閉車站選擇">×</button></div><p id="picker-subtitle" class="hint"></p><label>篩選車站<input id="stop-filter" type="search" placeholder="輸入站名" autocomplete="off"></label><div id="stop-results" class="results"></div></section>
+    </section>
+    <section id="nearby-view" class="view" hidden>
+      <div class="eyebrow">START FROM A STOP</div><h1>找附近的九巴站</h1><p class="intro">可直接輸入站名；定位只會在你按下按鈕後使用。</p>
+      <div class="panel"><label>九巴 / 龍運站名或 STOP ID<input id="stop-query" type="search" placeholder="例如 觀塘站、中環、A3ADFCDF8487ADB9" maxlength="80"></label><div class="near-controls"><button id="stop-search" class="button secondary">搜尋站名</button><button id="locate" class="button secondary">◎ 用目前位置找站</button><label>範圍<select id="radius"><option value="300">300 米</option><option value="500" selected>500 米</option><option value="1000">1 公里</option></select></label></div><p class="hint">位置只在本次頁面記憶體中計算距離，不保存、不傳送至伺服器。附近搜尋目前支援九巴及龍運。</p><p id="near-status" role="status" class="hint"></p></div><div id="near-results" class="results"></div>
+    </section>
+    <section id="settings-view" class="view" hidden>
+      <div class="eyebrow">MAKE IT YOURS</div><h1>你的交通看板</h1><div class="panel"><h2>更新與收藏</h2><label>自動更新間隔<select id="interval"><option value="0">手動更新</option><option value="30">每 30 秒</option><option value="60">每 60 秒</option><option value="120">每 2 分鐘</option></select></label><p class="hint">只有看板在前景時才會自動更新。收藏可在卡片上移動次序或移除，最多 24 項。靜態路線資料依營運商的快取期限更新。</p><button id="clear-cache" class="button secondary">清除本頁路線及車站快取</button><p id="storage-state" class="hint"></p></div>
+      <div class="panel"><h2>資料來源與範圍</h2><p>九巴 / 龍運、城巴、專線小巴及港鐵官方公開資料。港鐵涵蓋 Next Train 支援的十條路線，不包括輕鐵及港鐵巴士。</p><p>「官方 ETA」表示營運商提供的預計時間；API 沒有註明來源時，不宣稱為車輛定位即時資料。「時間表預報」依官方備註標示，並非保證到站。沒有預報時不補上估算。</p><p>收藏只存於這個瀏覽器，不會跨裝置同步。清除瀏覽器資料會失去收藏。</p><div class="source-links"><a href="https://data.gov.hk/en-data/dataset/hk-td-tis_21-etakmb" target="_blank" rel="noreferrer">九巴 / 龍運資料</a><a href="https://rt.data.gov.hk/v2/transport/citybus/route/CTB" target="_blank" rel="noreferrer">城巴資料</a><a href="https://data.etagmb.gov.hk" target="_blank" rel="noreferrer">專線小巴資料</a><a href="https://data.gov.hk/en-data/dataset/mtr-data2-nexttrain-data" target="_blank" rel="noreferrer">港鐵資料</a></div></div>
+      <p class="footnote">搭下一班 v1.0 · 獨立交通工具<br><a href="../">開啟聽頁文字朗讀器</a></p>
+    </section>
+    <p id="notice" class="notice" role="status" hidden></p>
+  </main>
+  <nav class="bottom-nav" aria-label="主要功能"><button data-view="home" aria-current="page"><span aria-hidden="true">▤</span>收藏看板</button><button data-view="search"><span aria-hidden="true">⌕</span>找路線</button><button data-view="nearby"><span aria-hidden="true">◎</span>找車站</button><button data-view="settings"><span aria-hidden="true">⚙</span>設定</button></nav>
+  <noscript>請啟用 JavaScript 以查詢官方到站資料。</noscript>
+</body></html>

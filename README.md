@@ -58,3 +58,10 @@ No actual iPhone, browser speech engine, DOM visual rendering, or WebMCP runtime
 ## Limits
 
 20 MB per imported file and 8 million characters per book. Large books may take a moment to parse and the total library is limited by browser storage. Clearing browser data, storage eviction or private mode can remove it. Voice availability and speech quality depend on the operating system/browser; browser-labelled local voices are not an independent audit of the OS speech engine. Native speech word boundaries are inconsistent; resume may repeat part of a segment. No copyrighted novel is bundled.
+
+
+## Hong Kong transit app
+
+The independent [transit ETA app](dist/transit/) lives at dist/transit/; the reader is unchanged. For setup, official data sources, scope and validation see [its README](dist/transit/README.md). On the existing GitHub Pages site, open [the transit app](https://yuktun.github.io/demo-app/dist/transit/).
+
+This repository hosts multiple independent apps. Put every newly requested app in its own separate folder (for example `dist/<app-name>/` for a static app), preserve existing app folders and data, and use relative asset paths. Do not replace or relocate an existing app when adding another one.
