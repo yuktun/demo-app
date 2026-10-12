@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#123f40"><meta name="description" content="香港巴士、小巴和港鐵到站預報；收藏你的日常路線。">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://data.etabus.gov.hk https://rt.data.gov.hk https://data.etagmb.gov.hk; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://data.etabus.gov.hk https://rt.data.gov.hk https://data.etagmb.gov.hk; img-src 'self' data: https://tile.openstreetmap.org; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>搭下一班 · 香港到站</title>
-  <link rel="stylesheet" href="./styles.css"><script type="module" src="./app.js"></script>
+  <link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./vendor/leaflet/leaflet.css"><script type="module" src="./app.js"></script>
 </head>
 <body>
   <header class="topbar"><a class="brand" href="./"><span class="logo" aria-hidden="true">↗</span><span>搭下一班<small>香港公共交通到站預報</small></span></a><button id="theme" class="icon-button" aria-label="切換深色或淺色主題">◐</button></header>
@@ -31,10 +32,17 @@
     <section id="settings-view" class="view" hidden>
       <div class="eyebrow">MAKE IT YOURS</div><h1>你的交通看板</h1><div class="panel"><h2>更新與收藏</h2><label>自動更新間隔<select id="interval"><option value="0">手動更新</option><option value="30">每 30 秒</option><option value="60">每 60 秒</option><option value="120">每 2 分鐘</option></select></label><p class="hint">只有看板在前景時才會自動更新。收藏可在卡片上移動次序或移除，最多 24 項。靜態路線資料依營運商的快取期限更新。</p><button id="clear-cache" class="button secondary">清除本頁路線及車站快取</button><p id="storage-state" class="hint"></p></div>
       <div class="panel"><h2>資料來源與範圍</h2><p>九巴 / 龍運、城巴、專線小巴及港鐵官方公開資料。港鐵涵蓋 Next Train 支援的十條路線，不包括輕鐵及港鐵巴士。</p><p>「官方 ETA」表示營運商提供的預計時間；API 沒有註明來源時，不宣稱為車輛定位即時資料。「時間表預報」依官方備註標示，並非保證到站。沒有預報時不補上估算。</p><p>收藏只存於這個瀏覽器，不會跨裝置同步。清除瀏覽器資料會失去收藏。</p><div class="source-links"><a href="https://data.gov.hk/en-data/dataset/hk-td-tis_21-etakmb" target="_blank" rel="noreferrer">九巴 / 龍運資料</a><a href="https://rt.data.gov.hk/v2/transport/citybus/route/CTB" target="_blank" rel="noreferrer">城巴資料</a><a href="https://data.etagmb.gov.hk" target="_blank" rel="noreferrer">專線小巴資料</a><a href="https://data.gov.hk/en-data/dataset/mtr-data2-nexttrain-data" target="_blank" rel="noreferrer">港鐵資料</a></div></div>
-      <p class="footnote">搭下一班 v1.0 · 獨立交通工具<br><a href="../">開啟聽頁文字朗讀器</a></p>
+      <p class="footnote">搭下一班 v1.1 · 獨立交通工具<br><a href="../">開啟聽頁文字朗讀器</a></p>
     </section>
     <p id="notice" class="notice" role="status" hidden></p>
   </main>
   <nav class="bottom-nav" aria-label="主要功能"><button data-view="home" aria-current="page"><span aria-hidden="true">▤</span>收藏看板</button><button data-view="search"><span aria-hidden="true">⌕</span>找路線</button><button data-view="nearby"><span aria-hidden="true">◎</span>找車站</button><button data-view="settings"><span aria-hidden="true">⚙</span>設定</button></nav>
+  <dialog id="route-detail" aria-labelledby="detail-title" class="route-detail">
+    <div class="detail-header"><button id="detail-close" class="icon-button" aria-label="關閉路線地圖">←</button><div><h2 id="detail-title">路線地圖</h2><p id="detail-subtitle"></p></div><button id="detail-flip" class="button secondary" disabled>⇄ 反方向</button></div>
+    <div class="detail-scroll"><div id="detail-map" class="route-map" role="region" aria-label="官方路線站點地圖"></div><div class="map-tools"><button id="detail-fit" class="button secondary" disabled>全線站點</button><button id="detail-retry" class="button secondary">重新載入</button></div><p id="detail-status" class="hint" role="status"></p><p class="map-legend">● 藍圈：目前選站　● 綠圈：已收藏上車站　● 紫圈：定位位置</p><p class="hint" id="detail-coordinate-note"></p>
+      <section id="detail-selection-panel" class="selection-panel" aria-label="目前選站到站預報" hidden><h3 id="detail-selection"></h3><div id="detail-arrivals" class="detail-arrivals" aria-live="polite"></div><p id="detail-timestamp" class="hint"></p><div class="map-tools"><button id="detail-refresh" class="button secondary" disabled>↻ 刷新到站</button><button id="detail-save" class="button" disabled>收藏此站</button></div></section>
+      <ol id="detail-stops" class="detail-stops" aria-label="依路線次序排列的車站"></ol>
+    </div><div class="detail-footer"><button id="detail-location" class="button secondary" disabled>◎ 我的位置</button><small>定位不保存；底圖服務會得知所檢視區域。<br><a href="https://www.openstreetmap.org/fixthemap" target="_blank" rel="noreferrer">回報底圖問題</a></small></div>
+  </dialog>
   <noscript>請啟用 JavaScript 以查詢官方到站資料。</noscript>
 </body></html>

@@ -1,4 +1,6 @@
 import { BASE, OPERATORS, hkTime, countdown, isStale, keyOf, restoreFavourites, normaliseBus, normaliseMtr, normaliseGmb, distance, getJSON, pool } from './core.js';
+import { createRouteDetail } from './route-map.js';
+import { coordinate, chooseOpposite } from './map-core.js';
 
 const $ = id => document.getElementById(id);
 const STORAGE = 'next-ride.favourites.v1';
@@ -20,6 +22,7 @@ const boards = new Map(), cache = new Map();
 const catalogue = url => getJSON(url, fetch, 'default');
 const labels = { AEL:'機場快綫', TCL:'東涌綫', TML:'屯馬綫', TKL:'將軍澳綫', EAL:'東鐵綫', SIL:'南港島綫', TWL:'荃灣綫', ISL:'港島綫', KTL:'觀塘綫', DRL:'迪士尼綫' };
 const destinations = { AEL:['機場 / 博覽館','香港'], TCL:['東涌','香港'], TML:['屯門','烏溪沙'], TKL:['寶琳 / 康城','北角 / 調景嶺'], EAL:['羅湖 / 落馬洲及其他北行終點','金鐘及其他南行終點'], SIL:['海怡半島','金鐘'], TWL:['荃灣','中環'], ISL:['柴灣','堅尼地城'], KTL:['調景嶺','黃埔'], DRL:['欣澳','迪士尼'] };
+const routeDetail = createRouteDetail({loadStops:routeStops,loadArrival:fetchArrival,loadOpposite:findOpposite,saveFavourite:addFavourite,notify:notice});
 
 function el(tag, cls, text) { const node = document.createElement(tag); if (cls) node.className = cls; if (text !== undefined) node.textContent = text; return node; }
 function button(text, fn, cls = 'button secondary') { const b = el('button', cls, text); b.type = 'button'; b.addEventListener('click', fn); return b; }
@@ -85,7 +88,9 @@ function renderBoards() {
     const actions = el('div','board-actions');
     const up = button('↑',() => moveFavourite(f,-1),'small-button'); up.setAttribute('aria-label',`將 ${f.route} ${f.name} 向上移`); up.disabled = i === 0;
     const down = button('↓',() => moveFavourite(f,1),'small-button'); down.setAttribute('aria-label',`將 ${f.route} ${f.name} 向下移`); down.disabled = i === favourites.length-1;
-    actions.append(up,down,button('換站',() => openFavourite(f),'small-button'),button('移除',() => removeFavourite(f),'small-button')); footer.append(actions);
+    actions.append(up,down);
+    if (f.co !== 'MTR') actions.append(button('地圖',() => routeDetail.open(f),'small-button'));
+    actions.append(button('換站',() => openFavourite(f),'small-button'),button('移除',() => removeFavourite(f),'small-button')); footer.append(actions);
     card.append(head,body,footer); $('boards').append(card);
   });
 }
@@ -166,7 +171,11 @@ async function searchRoutes() {
     if (gen !== routeGeneration || co !== operator) return;
     resultRows = rows.slice(0,60);
     $('search-status').textContent = rows.length ? `${rows.length} 個結果${rows.length > 60 ? '；顯示首 60 個，請收窄搜尋' : ''}` : '找不到符合的路線或車站，請檢查地區及號碼。';
-    for (const r of resultRows) $('results').append(resultRow(co === 'MTR' ? r.name : `${r.route} · 往 ${r.dest}`,co === 'MTR' ? `${labels[r.route]} · ${r.en}` : `${r.orig} → ${r.dest}${r.service && r.service !== '1' ? ' · 特別班次 '+r.service : ''}${r.description ? ' · '+r.description : ''}`,() => co === 'MTR' ? pickMtr(r) : pickStops(r)));
+    for (const r of resultRows) {
+      const row = resultRow(co === 'MTR' ? r.name : `${r.route} · 往 ${r.dest}`,co === 'MTR' ? `${labels[r.route]} · ${r.en}` : `${r.orig} → ${r.dest}${r.service && r.service !== '1' ? ' · 特別班次 '+r.service : ''}${r.description ? ' · '+r.description : ''}`,() => co === 'MTR' ? pickMtr(r) : pickStops(r));
+      if (co !== 'MTR') row.append(button('地圖',() => routeDetail.open(r),'small-button'));
+      $('results').append(row);
+    }
   } catch (err) { if (gen === routeGeneration) $('search-status').textContent = `無法載入：${err.message}。請重試。`; }
 }
 async function ensureStations() {
@@ -175,11 +184,25 @@ async function ensureStations() {
   stationData = data; names = Object.fromEntries(Object.values(data).flat().map(s => [s.stop,s.name]));
 }
 async function routeStops(r) {
-  if (r.co === 'GMB') return memo(`gmb-stops-${r.routeId}-${r.dir}`,async () => ((await catalogue(`${BASE.GMB}/route-stop/${r.routeId}/${r.dir}`)).data?.route_stops || []).map(s => ({stop:String(s.stop_id),name:s.name_tc,en:s.name_en,seq:Number(s.stop_seq)})));
+  if (r.co === 'GMB') {
+    const rows = await memo(`gmb-stops-${r.routeId}-${r.dir}`,async () => (await catalogue(`${BASE.GMB}/route-stop/${r.routeId}/${r.dir}`)).data?.route_stops || []);
+    return pool(rows,async s => { let coords = null; try {const info = await memo('gmb-stop-'+s.stop_id,async () => (await catalogue(`${BASE.GMB}/stop/${s.stop_id}`)).data);coords = coordinate(info);}catch{} return {stop:String(s.stop_id),name:s.name_tc,en:s.name_en,seq:Number(s.stop_seq),coords}; });
+  }
   const bound = r.dir === 'O' ? 'outbound' : 'inbound';
   const path = r.co === 'KMB' ? `/route-stop/${r.route}/${bound}/${r.service}` : `/route-stop/CTB/${r.route}/${bound}`;
   const rows = await memo(`${r.co}-${path}`,async () => (await catalogue(BASE[r.co]+path)).data || []);
-  return pool(rows,async s => { try { const info = await stopInfo(r.co,s.stop); return {stop:s.stop,seq:Number(s.seq),name:info.name_tc,en:info.name_en}; } catch { return {stop:s.stop,seq:Number(s.seq),name:`站名暫不可用 (${s.stop})`,en:''}; } });
+  return pool(rows,async s => { try { const info = await stopInfo(r.co,s.stop); return {stop:s.stop,seq:Number(s.seq),name:info.name_tc,en:info.name_en,coords:coordinate(info)}; } catch { return {stop:s.stop,seq:Number(s.seq),name:`站名暫不可用 (${s.stop})`,en:'',coords:null}; } });
+}
+async function findOpposite(r) {
+  let rows;
+  if (r.co === 'GMB') {
+    const data = (await catalogue(`${BASE.GMB}/route/${r.routeId}`)).data || [];
+    rows = data.flatMap(x => (x.directions || []).map(d => ({co:'GMB',route:x.route_code,routeId:Number(x.route_id),region:x.region,dir:Number(d.route_seq),orig:d.orig_tc,dest:d.dest_tc,description:x.description_tc})));
+  } else {
+    const data = (await routeList(r.co)).filter(x => x.route === r.route);
+    rows = data.flatMap(x => r.co === 'KMB' ? [{co:'KMB',route:x.route,dir:x.bound,service:x.service_type,orig:x.orig_tc,dest:x.dest_tc}] : [{co:'CTB',route:x.route,dir:'O',orig:x.orig_tc,dest:x.dest_tc},{co:'CTB',route:x.route,dir:'I',orig:x.dest_tc,dest:x.orig_tc}]);
+  }
+  return chooseOpposite(rows,r);
 }
 async function pickStops(r, replacing) {
   const gen = ++pickerGeneration; selection = {route:r,replacing}; pickerRows = [];
