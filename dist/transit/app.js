@@ -1,6 +1,7 @@
 import { BASE, OPERATORS, hkTime, countdown, isStale, keyOf, restoreFavourites, normaliseBus, normaliseMtr, normaliseGmb, distance, getJSON, pool } from './core.js';
 import { createRouteDetail } from './route-map.js';
 import { coordinate, chooseOpposite } from './map-core.js';
+import { createBusArrivalFetcher } from './joint-eta.js';
 
 const $ = id => document.getElementById(id);
 const STORAGE = 'next-ride.favourites.v1';
@@ -23,6 +24,7 @@ const catalogue = url => getJSON(url, fetch, 'default');
 const labels = { AEL:'機場快綫', TCL:'東涌綫', TML:'屯馬綫', TKL:'將軍澳綫', EAL:'東鐵綫', SIL:'南港島綫', TWL:'荃灣綫', ISL:'港島綫', KTL:'觀塘綫', DRL:'迪士尼綫' };
 const destinations = { AEL:['機場 / 博覽館','香港'], TCL:['東涌','香港'], TML:['屯門','烏溪沙'], TKL:['寶琳 / 康城','北角 / 調景嶺'], EAL:['羅湖 / 落馬洲及其他北行終點','金鐘及其他南行終點'], SIL:['海怡半島','金鐘'], TWL:['荃灣','中環'], ISL:['柴灣','堅尼地城'], KTL:['調景嶺','黃埔'], DRL:['欣澳','迪士尼'] };
 const routeDetail = createRouteDetail({loadStops:routeStops,loadArrival:fetchArrival,loadOpposite:findOpposite,saveFavourite:addFavourite,notify:notice});
+const fetchBusArrival=createBusArrivalFetcher({fetchSingle:fetchSingleBus,loadVariants:busVariants,loadStops:routeStops,loadRegistry:()=>memo('joint-registry',()=>catalogue('./joint-routes.json')),memo});
 
 function el(tag, cls, text) { const node = document.createElement(tag); if (cls) node.className = cls; if (text !== undefined) node.textContent = text; return node; }
 function button(text, fn, cls = 'button secondary') { const b = el('button', cls, text); b.type = 'button'; b.addEventListener('click', fn); return b; }
@@ -62,7 +64,8 @@ function renderBoards() {
     const data = boards.get(keyOf(f));
     const card = el('article','board');
     const head = el('div','board-head'); head.append(el('span','route-badge',f.co === 'MTR' ? labels[f.route] || f.route : f.route));
-    const info = el('div','board-info'); info.append(el('h2','',f.name),el('p','',`${OPERATORS[f.co]} · 往 ${f.dest}`)); head.append(info);
+    const operatorName=data?.joint ? `${data.company?.startsWith('LWB')?'龍運':'九巴'}＋城巴（聯營）` : OPERATORS[f.co];
+    const info = el('div','board-info'); info.append(el('h2','',f.name),el('p','',`${operatorName} · 往 ${f.dest}`)); head.append(info);
     const body = el('div','board-body');
     if (!data) body.append(el('p','hint','按「刷新全部」載入官方預報。'));
     else {
@@ -71,6 +74,8 @@ function renderBoards() {
       if (data.error) body.append(el('p','warning',`更新失敗：${data.error}。${data.arrivals?.length ? '下方只供查閱上次預報。' : '請稍後重試。'}`));
       else if (stale) body.append(el('p','warning','資料已過期或離線，請刷新後再作出行參考。'));
       if (data.message) body.append(el('p',data.alert ? 'warning' : 'hint',data.message));
+      for(const warning of data.warnings||[])body.append(el('p','warning',warning));
+      if(data.partnerStop)body.append(el('p','hint',data.partnerStop));
       const grid = el('div','arrival-grid');
       for (const a of data.arrivals || []) {
         const expired = stale || isStale(a.timestamp || data.timestamp);
@@ -78,13 +83,17 @@ function renderBoards() {
         const item = el('div',`arrival ${c.state}`);
         item.dataset.time = a.time || ''; item.dataset.timestamp = a.timestamp || data.timestamp || ''; item.dataset.failed = data.error ? 'yes' : '';
         item.append(el('strong','',c.text),el('em','',c.unit),el('span','time',shortClock(a.time)),el('span','kind',a.kind));
-        if (f.co === 'MTR') item.append(el('p','',`往 ${a.dest}`));
+        if(a.operator)item.append(el('span','operator-label',a.operator==='CTB'?'城巴':data.joint?(data.company?.startsWith('LWB')?'龍運':'九巴'):OPERATORS[a.operator]));
+        if ((f.co === 'MTR' || data.joint) && a.dest) item.append(el('p','',`往 ${a.dest}`));
         if (a.remark) item.append(el('p','',a.remark));
         grid.append(item);
       }
       body.append(grid);
     }
-    const footer = el('div','board-footer'); footer.append(el('span','',data?.timestamp ? `資料 ${clock(data.timestamp)}` : '尚未更新'));
+    const footer = el('div','board-footer'),times=el('span');
+    if(data?.feeds)for(const feed of data.feeds)times.append(el('span','feed-time',`${feed.co==='CTB'?'城巴':data.company?.startsWith('LWB')?'龍運':'九巴'} ${feed.error?'未更新':clock(feed.timestamp)}`));
+    else times.textContent=data?.timestamp?`資料 ${clock(data.timestamp)}`:'尚未更新';
+    footer.append(times);
     const actions = el('div','board-actions');
     const up = button('↑',() => moveFavourite(f,-1),'small-button'); up.setAttribute('aria-label',`將 ${f.route} ${f.name} 向上移`); up.disabled = i === 0;
     const down = button('↓',() => moveFavourite(f,1),'small-button'); down.setAttribute('aria-label',`將 ${f.route} ${f.name} 向下移`); down.disabled = i === favourites.length-1;
@@ -97,8 +106,14 @@ function renderBoards() {
 async function fetchArrival(f) {
   if (f.co === 'MTR') { await ensureStations().catch(() => {}); return normaliseMtr(await getJSON(`${BASE.MTR}?line=${f.route}&sta=${f.stop}&lang=TC`),f,names); }
   if (f.co === 'GMB') return normaliseGmb(await getJSON(`${BASE.GMB}/eta/route-stop/${f.routeId}/${f.dir}/${f.seq}`),f);
-  const path = f.co === 'KMB' ? `/eta/${f.stop}/${f.route}/${f.service}` : `/eta/CTB/${f.stop}/${f.route}`;
+  return fetchBusArrival(f);
+}
+async function fetchSingleBus(f) {
+  const path=f.co==='KMB'?`/eta/${f.stop}/${f.route}/${f.service}`:`/eta/CTB/${f.stop}/${f.route}`;
   return normaliseBus(await getJSON(BASE[f.co]+path),f);
+}
+async function busVariants(co,route) {
+  return (await routeList(co)).filter(r=>r.route===route).flatMap(r=>co==='KMB'?[{co,route:r.route,dir:r.bound,service:r.service_type,orig:r.orig_tc,dest:r.dest_tc}]:[{co,route:r.route,dir:'O',orig:r.orig_tc,dest:r.dest_tc},{co,route:r.route,dir:'I',orig:r.dest_tc,dest:r.orig_tc}]);
 }
 async function refresh() {
   if (refreshing || !favourites.length || document.hidden) { schedule(); return; }

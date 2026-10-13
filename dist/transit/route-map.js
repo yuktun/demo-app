@@ -61,13 +61,17 @@ export function createRouteDetail({loadStops,loadArrival,loadOpposite,saveFavour
     if(loadingArrival)arrivals.append(node('p','hint','正在更新到站預報…'));
     if(etaResult?.error)arrivals.append(node('p','warning',`更新失敗：${etaResult.error}。${etaResult.arrivals?.length?'下方僅供查閱上次預報。':'請稍後重試。'}`));
     if(etaResult?.message)arrivals.append(node('p','hint',etaResult.message));
+    for(const warning of etaResult?.warnings||[])arrivals.append(node('p','warning',warning));
+    if(etaResult?.partnerStop)arrivals.append(node('p','hint',etaResult.partnerStop));
     const stale=etaResult?.error||!navigator.onLine||isStale(etaResult?.timestamp);
     for(const a of etaResult?.arrivals||[]) {
       const expired=stale||isStale(a.timestamp||etaResult.timestamp);const c=expired?{text:'上次預報',unit:'資料已過期',state:'stale'}:countdown(a.time);
       const pill=node('div',`arrival ${c.state}`);pill.dataset.time=a.time||'';pill.dataset.timestamp=a.timestamp||etaResult.timestamp||'';pill.dataset.failed=etaResult.error?'yes':'';
       pill.append(node('strong','',c.text),node('em','',c.unit),node('span','time',time(a.time)),node('span','kind',a.kind));if(a.remark)pill.append(node('p','',a.remark));arrivals.append(pill);
+      if(a.operator)pill.append(node('span','operator-label',a.operator==='CTB'?'城巴':etaResult.joint?(etaResult.company?.startsWith('LWB')?'龍運':'九巴'):OPERATORS[a.operator]));
+      if(etaResult.joint&&a.dest)pill.append(node('p','',`往 ${a.dest}`));
     }
-    stamp.textContent=etaResult?.timestamp?`官方資料時間 ${time(etaResult.timestamp)} · 香港時間`:'尚未更新';
+    stamp.textContent=etaResult?.feeds?etaResult.feeds.map(f=>`${f.co==='CTB'?'城巴':etaResult.company?.startsWith('LWB')?'龍運':'九巴'} ${f.error?'未更新':time(f.timestamp)}`).join(' · ')+' · 香港時間':etaResult?.timestamp?`官方資料時間 ${time(etaResult.timestamp)} · 香港時間`:'尚未更新';
     refresh.disabled=loadingArrival;
   }
   async function updateArrival() {

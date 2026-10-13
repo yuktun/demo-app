@@ -45,8 +45,8 @@ export function classify(remark = '', explicit) {
   return '官方 ETA'; // APIs without an explicit live/schedule field are not labelled GPS-live.
 }
 export function normaliseBus(json, f) {
-  const rows = (Array.isArray(json.data) ? json.data : []).filter(r => String(r.route) === f.route && String(r.dir) === f.dir && Number(r.seq) === f.seq && (f.co !== 'KMB' || String(r.service_type) === f.service));
-  const arrivals = rows.sort((a,b) => Number(a.eta_seq) - Number(b.eta_seq)).slice(0,3).map(r => ({ time: r.eta, dest: r.dest_tc || f.dest, remark: r.rmk_tc || '', kind: classify(r.rmk_tc), timestamp: r.data_timestamp }));
+  const rows = (Array.isArray(json.data) ? json.data : []).filter(r => String(r.route) === f.route && String(r.dir) === f.dir && Number(r.seq) === f.seq && (!r.co || r.co === f.co) && (!r.stop || String(r.stop) === f.stop) && (f.co !== 'KMB' || String(r.service_type) === f.service));
+  const arrivals = rows.sort((a,b) => Number(a.eta_seq) - Number(b.eta_seq)).slice(0,3).map(r => ({ time: r.eta, dest: r.dest_tc || f.dest, remark: r.rmk_tc || '', kind: classify(`${r.rmk_tc||''} ${r.rmk_en||''}`), timestamp: r.data_timestamp, operator:f.co }));
   return { arrivals, timestamp: json.generated_timestamp, message: arrivals.length ? '' : '此方向暫無到站預報；不代表停駛。' };
 }
 export function normaliseMtr(json, f, names = {}) {

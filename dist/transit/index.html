@@ -32,7 +32,8 @@
     <section id="settings-view" class="view" hidden>
       <div class="eyebrow">MAKE IT YOURS</div><h1>你的交通看板</h1><div class="panel"><h2>更新與收藏</h2><label>自動更新間隔<select id="interval"><option value="0">手動更新</option><option value="30">每 30 秒</option><option value="60">每 60 秒</option><option value="120">每 2 分鐘</option></select></label><p class="hint">只有看板在前景時才會自動更新。收藏可在卡片上移動次序或移除，最多 24 項。靜態路線資料依營運商的快取期限更新。</p><button id="clear-cache" class="button secondary">清除本頁路線及車站快取</button><p id="storage-state" class="hint"></p></div>
       <div class="panel"><h2>資料來源與範圍</h2><p>九巴 / 龍運、城巴、專線小巴及港鐵官方公開資料。港鐵涵蓋 Next Train 支援的十條路線，不包括輕鐵及港鐵巴士。</p><p>「官方 ETA」表示營運商提供的預計時間；API 沒有註明來源時，不宣稱為車輛定位即時資料。「時間表預報」依官方備註標示，並非保證到站。沒有預報時不補上估算。</p><p>收藏只存於這個瀏覽器，不會跨裝置同步。清除瀏覽器資料會失去收藏。</p><div class="source-links"><a href="https://data.gov.hk/en-data/dataset/hk-td-tis_21-etakmb" target="_blank" rel="noreferrer">九巴 / 龍運資料</a><a href="https://rt.data.gov.hk/v2/transport/citybus/route/CTB" target="_blank" rel="noreferrer">城巴資料</a><a href="https://data.etagmb.gov.hk" target="_blank" rel="noreferrer">專線小巴資料</a><a href="https://data.gov.hk/en-data/dataset/mtr-data2-nexttrain-data" target="_blank" rel="noreferrer">港鐵資料</a></div></div>
-      <p class="footnote">搭下一班 v1.1 · 獨立交通工具<br><a href="../">開啟聽頁文字朗讀器</a></p>
+      <div class="panel"><h2>聯營路線預報</h2><p>已核實的聯營上車站會合併九巴／龍運與城巴的官方預報，按時間排列，每班標明營運商及各自資料時間。一方暫無預報或連線失敗時會明確提示。</p><p>聯營名單及共享站名來自運輸署截至 2026-09-30 的資料；到站時間仍由營運商即時查詢。未能核實的站點、方向或特別班次只列出所選營運商，不猜測配對。API 未明示 GPS 或時間表來源時標為「官方 ETA」。</p></div>
+      <p class="footnote">搭下一班 v1.2 · 獨立交通工具<br><a href="../">開啟聽頁文字朗讀器</a></p>
     </section>
     <p id="notice" class="notice" role="status" hidden></p>
   </main>
