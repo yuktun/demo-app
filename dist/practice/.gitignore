@@ -1,0 +1,11 @@
+# Imported scores and personal backups must stay outside source control.
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.webp
+practice-backup-*.json
+*.private.json
+letter-score-backup*.json
+private/
+qa-output/

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#173b36">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; font-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>練習之間 · 鍵盤練習伴奏簿</title><link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<a href="#workspace" class="skip">跳至樂譜與練習</a>
+<header class="topbar"><a class="brand" href="./"><span class="brandmark" aria-hidden="true">♮</span><span>練習之間<small>一首歌，一小段，慢慢累積。</small></span></a><button id="data-open" class="quiet">備份與說明</button></header>
+<div id="storage-warning" class="warning" role="alert" hidden></div>
+<div id="notice" class="notice" role="status" aria-live="polite"></div>
+<main id="workspace">
+  <section class="session-bar" aria-label="今日練習計時">
+    <div class="session-title"><span class="eyebrow">給音樂的一點時間</span><h1>今天，從這一段開始。</h1><label class="inline">本次目標 <input id="session-minutes" type="number" min="1" max="180" step="1" value="30"> 分鐘</label></div>
+    <div class="timer-block"><output id="timer" aria-label="剩餘時間">30:00</output><span id="timer-state">準備好了就開始</span></div>
+    <div class="timer-actions"><button id="timer-toggle" class="primary">開始練習</button><button id="session-end" class="quiet">結束並記錄</button></div>
+    <progress id="session-progress" max="1" value="0" aria-label="本次練習進度"></progress>
+  </section>
+  <div class="work-grid">
+    <section class="score-panel" aria-labelledby="score-heading">
+      <div class="panel-heading"><div><span class="eyebrow">你的樂譜 · 只留在本機</span><h2 id="score-heading">樂譜架</h2></div><label class="button quiet" for="score-input">匯入樂譜<input id="score-input" class="file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp" multiple></label></div>
+      <div class="score-toolbar"><button id="page-prev" aria-label="上一頁">←</button><span id="page-label" aria-live="polite">未載入樂譜</span><button id="page-next" aria-label="下一頁">→</button><label class="zoom-label">大小<select id="zoom"><option value="1">符合寬度</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="2">200%</option></select></label><button id="focus-toggle" class="quiet" aria-pressed="false">專注看譜</button></div>
+      <div id="score-viewport" tabindex="0" aria-label="樂譜，可捲動查看"><div id="score-empty"><div class="empty-art" aria-hidden="true">♫</div><h3>把喜歡的歌，放上譜架。</h3><p>匯入你有權使用的 PDF 或圖片。<br>可以先安排段落，準備好樂譜再開始。</p><p class="muted">PDF 最多 500 頁；圖片可多選，依選取順序排列。<br>每個檔案最多 20 MB。不會上傳。</p></div><div id="score-surface" hidden><canvas id="pdf-canvas" aria-label="PDF 樂譜頁面"></canvas><img id="score-image" alt="匯入的樂譜頁面" hidden></div></div>
+      <div class="score-footer"><span id="score-name">尚未匯入 · 不含預設歌曲樂譜</span><button id="score-remove" class="text-button" disabled>移除樂譜</button></div>
+    </section>
+    <aside class="practice-panel" aria-label="練習計劃">
+      <div class="panel-heading"><div><span class="eyebrow">照自己的步伐</span><h2>這次練甚麼？</h2></div><button id="piece-add" class="quiet">＋ 歌曲</button></div>
+      <label>歌曲<select id="piece-select"></select></label>
+      <div class="row"><label class="grow">歌曲名稱<input id="piece-title" maxlength="120"></label><button id="piece-remove" class="text-button">刪除歌曲</button></div>
+      <div class="section-heading"><h3>練習段落</h3><button id="section-add" class="text-button">＋ 段落</button></div><div id="section-list" class="section-list"></div>
+      <p id="plan-total" class="muted"></p>
+      <div class="section-editor"><div class="row"><label class="grow">段落／小節<input id="section-title" maxlength="120"></label><label class="minutes-label">預計分鐘<input id="section-minutes" type="number" min="1" max="180" step="1"></label></div>
+      <label>老師提醒／自己的練習重點<textarea id="section-notes" rows="3" maxlength="5000" placeholder="例如：下次請老師示範這一段的節奏。"></textarea></label><button id="section-remove" class="text-button">刪除此段落</button></div>
+      <section class="metronome" aria-labelledby="metro-heading"><div class="section-heading"><h3 id="metro-heading">節拍器</h3><span id="beat-light" class="beat-light" aria-hidden="true"></span></div><div class="tempo-row"><button id="tempo-down" aria-label="減慢五拍">−</button><label><input id="tempo" type="number" min="30" max="240" step="1"><span>BPM</span></label><button id="tempo-up" aria-label="加快五拍">＋</button><label class="beats-label">每小節<select id="beats"><option value="4">4 拍</option><option value="3">3 拍</option><option value="2">2 拍</option><option value="1">不重拍</option></select></label></div><button id="metro-toggle" class="secondary" aria-pressed="false">啟動節拍器</button><p class="muted">由你按下才發聲。切換分頁、鎖定螢幕時會停止；回來後請重新啟動。背景播放不保證可用。</p></section>
+      <section class="reflection"><h3>留下這一段的感覺</h3><label>主觀難度<select id="difficulty"><option value="1">1 · 很輕鬆</option><option value="2">2 · 大致順暢</option><option value="3" selected>3 · 還要熟習</option><option value="4">4 · 有點吃力</option><option value="5">5 · 想請教老師</option></select></label><label>簡短筆記<input id="history-note" maxlength="1000" placeholder="哪裏順了？哪裏想再試？"></label><button id="history-add" class="secondary">記錄速度與感覺</button><ol id="history-list" class="history-list"></ol></section>
+    </aside>
+  </div>
+  <section class="questions-panel"><div><span class="eyebrow">把疑問留給下一堂課</span><h2>想問老師的事</h2><p class="muted">不用急着解決所有問題，先記下來。</p></div><label class="grow"><span class="sr-only">下堂課問題</span><textarea id="questions" rows="4" maxlength="10000" placeholder="例如：這一段的拍子應該怎樣數？"></textarea></label></section>
+  <footer class="page-footer"><span id="save-status" role="status">正在開啟本機資料…</span><span>只存這個瀏覽器 · 記得定期匯出備份</span></footer>
+</main>
+<dialog id="data-dialog"><div class="dialog-heading"><h2>你的資料，由你保管。</h2><button id="data-close" aria-label="關閉備份與說明">✕</button></div><p>歌曲、樂譜、筆記及紀錄只儲存在這個裝置的瀏覽器，沒有帳戶或雲端同步，也不會上傳。清除網站資料、私密瀏覽或系統回收儲存空間，都可能令資料消失。</p><p><strong>本機儲存不是備份。</strong>請定期匯出，並把備份放在你信任的位置。備份包含你的樂譜與筆記；請勿放進公開程式碼庫。</p><button id="backup-export" class="primary">匯出完整備份</button><label for="backup-input" class="button quiet">選取備份以還原<input id="backup-input" class="file-input" type="file" accept=".json,application/json"></label><p class="muted">僅接受此應用程式第 1 版備份，最多 60 MB。還原前會再確認，並取代目前全部練習資料。</p><hr><h3>使用小提醒</h3><p>計時只計算本頁開啟且可見的練習時間。切換 App 或重新整理會暫停；重新整理最多可能少計最後 5 秒。每日長度與段落由你決定，預計分鐘只作參考，不會自動跳段。</p><p>此工具不聆聽、不評分、不提供指法建議。節拍聲需裝置允許播放；實際音量請先調低。iPad 可使用直向或橫向，放大後在譜面區捲動。</p><h3>最近練習</h3><ol id="session-history" class="history-list"></ol></dialog>
+<dialog id="restore-dialog"><h2>準備還原備份</h2><p id="restore-summary"></p><p>目前歌曲、樂譜與紀錄將被取代。建議先取消並匯出目前資料。</p><div class="row"><button id="restore-cancel" class="quiet">取消</button><button id="restore-confirm" class="primary">取代並還原</button></div></dialog>
+<script type="module" src="./app.js"></script>
+</body></html>
