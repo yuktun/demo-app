@@ -1,0 +1,342 @@
+{
+  "scope": "One original raster fixture in PNG and PDF containers; not independent notation samples",
+  "recognitionRunsAdded": 0,
+  "sourcePngSha256": "9f51aeb328f7960c7335ccc542f93def2d03bc4ab692375940ba8c3e1c71a25a",
+  "sourcePdfSha256": "f632d86f87f822f097b99540c485b5ef7a81757589f71d857149fcb635e3f3ee",
+  "embeddedPdfRasterExactlyMatchesPng": true,
+  "pdfImageTransformPoints": [
+    792.0,
+    0.0,
+    0.0,
+    252.0,
+    0.0,
+    180.0
+  ],
+  "pdfOmrRasterSize": [
+    3299,
+    2550
+  ],
+  "pngOmrRasterSize": [
+    3300,
+    1050
+  ],
+  "binaryComparison": {
+    "offsetPixels": [
+      0,
+      750
+    ],
+    "comparedPixels": 3463950,
+    "differentPixels": 0
+  },
+  "pngThreshold200VsOmrInkIoU": 0.9920283614076552,
+  "coordinateMapping": {
+    "png": [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "pdfToCanonical2x": [
+      0.48,
+      0,
+      0,
+      0.48,
+      0,
+      0
+    ]
+  },
+  "musicxmlLayoutCoordinatesUsed": false,
+  "headComparisons": [
+    {
+      "source": "png",
+      "headId": "101",
+      "expectedCenter": [
+        480.0,
+        650
+      ],
+      "recognizedCenter": [
+        485.0,
+        650.0
+      ],
+      "errorPixels": 5.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "png",
+      "headId": "99",
+      "expectedCenter": [
+        615.0,
+        632
+      ],
+      "recognizedCenter": [
+        620.0,
+        630.5
+      ],
+      "errorPixels": 5.220153254455275,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "png",
+      "headId": "95",
+      "expectedCenter": [
+        750.0,
+        614
+      ],
+      "recognizedCenter": [
+        755.0,
+        614.0
+      ],
+      "errorPixels": 5.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "png",
+      "headId": "91",
+      "expectedCenter": [
+        885.0,
+        578
+      ],
+      "recognizedCenter": [
+        890.0,
+        578.0
+      ],
+      "errorPixels": 5.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "png",
+      "headId": "111",
+      "expectedCenter": [
+        1165.0,
+        560
+      ],
+      "recognizedCenter": [
+        1166.0,
+        558.5
+      ],
+      "errorPixels": 1.8027756377319946,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "png",
+      "headId": "83",
+      "expectedCenter": [
+        1435.0,
+        524
+      ],
+      "recognizedCenter": [
+        1430.0,
+        524.0
+      ],
+      "errorPixels": 5.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "png",
+      "headId": "87",
+      "expectedCenter": [
+        1850.0,
+        542
+      ],
+      "recognizedCenter": [
+        1845.0,
+        542.0
+      ],
+      "errorPixels": 5.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "png",
+      "headId": "93",
+      "expectedCenter": [
+        1985.0,
+        578
+      ],
+      "recognizedCenter": [
+        1990.0,
+        578.0
+      ],
+      "errorPixels": 5.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "png",
+      "headId": "119",
+      "expectedCenter": [
+        2120.0,
+        614
+      ],
+      "recognizedCenter": [
+        2120.0,
+        614.0
+      ],
+      "errorPixels": 0.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "png",
+      "headId": "107",
+      "expectedCenter": [
+        2535.0,
+        524
+      ],
+      "recognizedCenter": [
+        2536.0,
+        522.5
+      ],
+      "errorPixels": 1.8027756377319946,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "pdf",
+      "headId": "101",
+      "expectedCenter": [
+        480.0,
+        1400
+      ],
+      "recognizedCenter": [
+        485.0,
+        1400.0
+      ],
+      "errorPixels": 5.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "pdf",
+      "headId": "99",
+      "expectedCenter": [
+        615.0,
+        1382
+      ],
+      "recognizedCenter": [
+        620.0,
+        1380.5
+      ],
+      "errorPixels": 5.220153254455275,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "pdf",
+      "headId": "95",
+      "expectedCenter": [
+        750.0,
+        1364
+      ],
+      "recognizedCenter": [
+        755.0,
+        1364.0
+      ],
+      "errorPixels": 5.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "pdf",
+      "headId": "91",
+      "expectedCenter": [
+        885.0,
+        1328
+      ],
+      "recognizedCenter": [
+        890.0,
+        1328.0
+      ],
+      "errorPixels": 5.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "pdf",
+      "headId": "111",
+      "expectedCenter": [
+        1165.0,
+        1310
+      ],
+      "recognizedCenter": [
+        1166.0,
+        1308.5
+      ],
+      "errorPixels": 1.8027756377319946,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "pdf",
+      "headId": "83",
+      "expectedCenter": [
+        1435.0,
+        1274
+      ],
+      "recognizedCenter": [
+        1430.0,
+        1274.0
+      ],
+      "errorPixels": 5.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "pdf",
+      "headId": "87",
+      "expectedCenter": [
+        1850.0,
+        1292
+      ],
+      "recognizedCenter": [
+        1845.0,
+        1292.0
+      ],
+      "errorPixels": 5.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "pdf",
+      "headId": "93",
+      "expectedCenter": [
+        1985.0,
+        1328
+      ],
+      "recognizedCenter": [
+        1990.0,
+        1328.0
+      ],
+      "errorPixels": 5.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "pdf",
+      "headId": "119",
+      "expectedCenter": [
+        2120.0,
+        1364
+      ],
+      "recognizedCenter": [
+        2120.0,
+        1364.0
+      ],
+      "errorPixels": 0.0,
+      "expectedCenterInsideBox": true
+    },
+    {
+      "source": "pdf",
+      "headId": "107",
+      "expectedCenter": [
+        2535.0,
+        1274
+      ],
+      "recognizedCenter": [
+        2536.0,
+        1272.5
+      ],
+      "errorPixels": 1.8027756377319946,
+      "expectedCenterInsideBox": true
+    }
+  ],
+  "maximumCenterErrorPixels": 5.220153254455275,
+  "meanCenterErrorPixels": 3.8825704529919265,
+  "boundsContainExpectedCenter": 20,
+  "noteHeadsCompared": 20,
+  "limitations": [
+    "Only unrotated, zero-skew, one-staff fixture mapping verified.",
+    "PDF right edge is one OMR pixel narrower; no width-ratio stretch is used.",
+    "Labels encode recognized pitches, not rhythm, rests or chords. Original notation remains authoritative."
+  ]
+}

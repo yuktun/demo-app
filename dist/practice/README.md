@@ -41,7 +41,7 @@ Limits: 100 pages, 2,000 bars, 10,000 events, 200 events per bar, 2 MB JSON. Com
 
 ## Validation and review
 
-Run `node --test tests/*.test.mjs` from the repository root. The integrated repository has 83 passing tests, including native/source metadata roundtrips, malformed source rejection, byte-budget boundaries, locked concurrent writes, obsolete metronome-resume rejection, compatible local record IDs, and existing application regressions. `npm run check` checks the existing apps; additionally run `node --check` on the practice/editor JavaScript modules.
+Run `node --test tests/*.test.mjs` from the repository root. The integrated repository has 92 passing tests, including native/source metadata roundtrips, malformed source rejection, byte-budget boundaries, locked concurrent writes, obsolete metronome-resume rejection, compatible local record IDs, and existing application regressions. `npm run check` checks the existing apps and overlay modules; additionally run `node --check` on the practice/editor JavaScript modules.
 
 Browser suites: `node tests/editor-browser.mjs` and `node tests/practice-browser.mjs`. Install Playwright in a separate development directory or provide `PLAYWRIGHT_MODULE` pointing to its `index.mjs`. Set `PRACTICE_BROWSER_PATH` to an installed Chromium/Edge executable if needed. `PRACTICE_QA_DIR` chooses an output directory outside the repository.
 
@@ -62,3 +62,7 @@ The optional companion offers local PDF/raster viewing, plans, notes, configurab
 `vendor/` contains PDF.js / pdfjs-dist 6.4.299 modules, worker, CMaps, standard fonts and WASM assets. Apache-2.0: [vendor/LICENSE](vendor/LICENSE); upstream https://github.com/mozilla/pdf.js. Asset-specific licenses are preserved in vendor directories.
 
 This application is isolated under `dist/practice/`; existing applications and their storage remain independent.
+
+## Original score with editable overlays (preview)
+
+The editor header links to [原譜＋標註](overlay.html), a separate original-PDF/image viewer with movable letter/octave labels. Ordinary file uploads are explicitly viewer/manual mode: no automatic recognition service is connected. Only the two original generic demo buttons load genuine precomputed Audiveris results. See [OVERLAY.md](OVERLAY.md) for source identity, registration evidence, privacy, limits and the browser checks. Existing editor and companion data remain independent.

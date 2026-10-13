@@ -1,0 +1,9 @@
+import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {resolve,extname,sep} from 'node:path';import {fileURLToPath} from 'node:url';
+import {demoFixtures} from '../dist/practice/overlay-demo.js';
+const dist=resolve(fileURLToPath(new URL('../dist/',import.meta.url)));
+export const origin='https://overlay.local.test/demo-app/dist';
+export const out=resolve(process.env.PRACTICE_QA_DIR||'../overlay-qa');
+export async function prepareFixtures(){await mkdir(out,{recursive:true});for(const [ext,f]of Object.entries(demoFixtures)){await writeFile(resolve(out,`staff-fixture.${ext}`),Buffer.from(f.bytes,'base64'));await writeFile(resolve(out,`fixture-${ext}.overlay.json`),JSON.stringify(f.pack));}}
+// Browser-only local response routing: no listening server, sockets or network fallback.
+export async function routeLocal(context){await context.route('**/*',async route=>{const url=new URL(route.request().url());if(url.origin!=='https://overlay.local.test'||!url.pathname.startsWith('/demo-app/dist/')){await route.abort('blockedbyclient');return;}let pathname;try{pathname=decodeURIComponent(url.pathname.slice('/demo-app/dist'.length));}catch{await route.fulfill({status:400,body:'Invalid path'});return;}const target=resolve(dist,'.'+pathname+(pathname.endsWith('/')?'index.html':''));if(!target.startsWith(dist+sep)){await route.fulfill({status:403,body:'Outside fixture root'});return;}try{await route.fulfill({status:200,contentType:({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.wasm':'application/wasm','.pdf':'application/pdf','.png':'image/png'})[extname(target)]||'application/octet-stream',body:await readFile(target)});}catch{await route.fulfill({status:404,body:'Not found'});}});}

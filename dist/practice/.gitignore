@@ -9,3 +9,6 @@ practice-backup-*.json
 letter-score-backup*.json
 private/
 qa-output/
+
+# User-authored source-bound annotation backups. Demo data lives in overlay-demo.js.
+*.overlay.json
