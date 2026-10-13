@@ -65,3 +65,7 @@ No actual iPhone, browser speech engine, DOM visual rendering, or WebMCP runtime
 The independent [transit ETA app](dist/transit/) lives at dist/transit/; the reader is unchanged. For setup, official data sources, scope and validation see [its README](dist/transit/README.md). On the existing GitHub Pages site, open [the transit app](https://yuktun.github.io/demo-app/dist/transit/).
 
 This repository hosts multiple independent apps. Put every newly requested app in its own separate folder (for example `dist/<app-name>/` for a static app), preserve existing app folders and data, and use relative asset paths. Do not replace or relocate an existing app when adding another one.
+
+## English practice
+
+The independent [English practice app](dist/english/) provides short sessions with Traditional Chinese support. See [its README](dist/english/README.md) for local setup, storage limits and checks.

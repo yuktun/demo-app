@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#163e37">
+  <meta name="description" content="Short English practice for clearer conversations, with Traditional Chinese support.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>English, a little every day</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23163e37'/%3E%3Cpath d='M19 17h27v6H26v7h17v6H26v7h20v6H19z' fill='%23f4d58b'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="topbar"><a class="brand" href="./"><span class="brand-icon" aria-hidden="true">e.</span><span>English <small>a little every day</small></span></a><span class="local-tag">On this device</span></header>
+  <nav class="navigation" aria-label="Main"><button data-nav="learn" aria-current="page">Practice <span lang="zh-Hant">練習</span></button><button data-nav="review">Review <span lang="zh-Hant">複習</span><span id="review-count" class="badge">0</span></button><button data-nav="history">History <span lang="zh-Hant">紀錄</span></button><button data-nav="data">My data <span lang="zh-Hant">資料</span></button></nav>
+  <p id="storage-status" class="storage-note" role="status" aria-live="polite"></p>
+  <main id="main" tabindex="-1"><p class="loading" role="status">Opening your practice… <span lang="zh-Hant">正在載入練習…</span></p><p id="boot-help">If this stays on screen, reload and serve this folder over HTTP with JavaScript enabled. <span lang="zh-Hant">如未能載入，請重新整理，並使用支援 JavaScript 的 HTTP 網頁。</span></p></main>
+  <noscript><p class="notice">JavaScript is needed for practice and local progress. <span lang="zh-Hant">練習及儲存進度需要 JavaScript。</span></p></noscript>
+  <footer>Small sessions. Clearer conversations. <span lang="zh-Hant">每天一點，表達更清楚。</span></footer>
+</body>
+</html>
