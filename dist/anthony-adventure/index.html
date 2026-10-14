@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#121417">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="《安東尼大冒險》- 手機網頁原創怪獸探索收集與回合制戰鬥 RPG">
+  <title>安東尼大冒險 · Anthony's Adventure RPG</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23e53935'/%3E%3Cpath d='M4 32h56v28H4z' fill='%23fff'/%3E%3Ccircle cx='32' cy='32' r='8' fill='%23212121'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="console-wrapper">
+    <!-- Screen Housing (Top Section) -->
+    <div class="screen-housing">
+      <div class="screen-header">
+        <span><span class="power-led"></span>DOT MATRIX WITH STEREO SOUND</span>
+        <span>ANTHONY V1.0</span>
+      </div>
+
+      <div class="canvas-container" id="canvasContainer">
+        <canvas id="gameCanvas" width="240" height="160"></canvas>
+
+        <!-- Overworld Dialog Box -->
+        <div id="dialogBox" class="dialog-overlay">
+          <div id="dialogText"></div>
+          <span class="dialog-indicator">▼</span>
+        </div>
+
+        <!-- Battle Controls Overlay -->
+        <div id="battleControls" class="battle-controls">
+          <div id="battleText" class="battle-text"></div>
+          <div id="battleMovesGrid" class="battle-moves-grid"></div>
+          <div id="battleCmdRow" class="battle-cmd-row">
+            <button class="cmd-btn cmd-fight" id="cmdFight">戰鬥</button>
+            <button class="cmd-btn cmd-bag" id="cmdBag">道具</button>
+            <button class="cmd-btn cmd-party" id="cmdParty">怪獸</button>
+            <button class="cmd-btn cmd-run" id="cmdRun">逃跑</button>
+          </div>
+        </div>
+
+        <!-- Title Screen Overlay -->
+        <div id="titleScreen" class="title-screen">
+          <div class="title-logo">安東尼大冒險</div>
+          <div class="title-sub">~ 晶石守護者與暗影魔龍 ~</div>
+          <button id="newGameBtn" class="title-menu-btn">開始冒險</button>
+          <button id="continueBtn" class="title-menu-btn" style="display: none; background: #059669;">繼續旅程</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls Housing (Bottom Section) -->
+    <div class="controls-housing">
+      <!-- Toolbar -->
+      <div class="utility-bar">
+        <button id="btnMenu" class="util-btn">📋 選單</button>
+        <button id="btnRun" class="util-btn">👟 跑步</button>
+        <button id="btnSpeed" class="util-btn">1.0×</button>
+        <button id="btnSound" class="util-btn">🔊 聲音</button>
+      </div>
+
+      <!-- Main Gamepad -->
+      <div class="joypad-area">
+        <!-- Virtual D-Pad -->
+        <div class="dpad-container" id="dpad">
+          <div class="dpad-cross">
+            <div class="dpad-up">▲</div>
+            <div class="dpad-down">▼</div>
+            <div class="dpad-left">◀</div>
+            <div class="dpad-right">▶</div>
+            <div class="dpad-center"></div>
+          </div>
+        </div>
+
+        <!-- Tilted Action Buttons -->
+        <div class="action-buttons">
+          <button class="action-btn btn-b-style" id="btnB">B</button>
+          <button class="action-btn btn-a-style" id="btnA">A</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Starter Select Modal -->
+  <div id="starterModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>挑選你的最初怪獸夥伴</span>
+      </div>
+      <div class="modal-body starter-cards">
+        <div class="starter-card">
+          <div>
+            <strong>🔥 #001 焰尾狐 (火)</strong><br>
+            <small>特長：高特攻與速度，燃燒之尾。</small>
+          </div>
+          <button onclick="window.game.chooseStarter(1)">選擇牠</button>
+        </div>
+        <div class="starter-card">
+          <div>
+            <strong>🌿 #003 葉鬃狼 (草)</strong><br>
+            <small>特長：強大的物理爆發與平衡防守。</small>
+          </div>
+          <button onclick="window.game.chooseStarter(3)">選擇牠</button>
+        </div>
+        <div class="starter-card">
+          <div>
+            <strong>💧 #005 晶沫獺 (水)</strong><br>
+            <small>特長：出色的耐久體力與水滴護甲。</small>
+          </div>
+          <button onclick="window.game.chooseStarter(5)">選擇牠</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- General Menu Modal -->
+  <div id="generalMenuModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>冒險選單</span>
+        <button class="modal-close-btn" onclick="window.game.closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <button class="title-menu-btn" style="width:100%; margin:6px 0;" onclick="window.game.closeModal(); window.game.openPartyMenu();">👾 夥伴隊伍</button>
+        <button class="title-menu-btn" style="width:100%; margin:6px 0;" onclick="window.game.closeModal(); window.game.openBagMenu();">🎒 冒險背包</button>
+        <button class="title-menu-btn" style="width:100%; margin:6px 0;" onclick="window.game.closeModal(); window.game.openDexModal();">📖 怪獸圖鑑</button>
+        <button class="title-menu-btn" style="width:100%; margin:6px 0; background:#059669;" onclick="window.game.saveGame(); window.game.closeModal();">💾 儲存進度</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Party Modal -->
+  <div id="partyModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>夥伴隊伍 (最多 6 隻)</span>
+        <button class="modal-close-btn" onclick="window.game.closeModal()">✕</button>
+      </div>
+      <div class="modal-body" id="partyList"></div>
+    </div>
+  </div>
+
+  <!-- Bag Modal -->
+  <div id="bagModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>冒險背包</span>
+        <button class="modal-close-btn" onclick="window.game.closeModal()">✕</button>
+      </div>
+      <div class="modal-body" id="bagList"></div>
+    </div>
+  </div>
+
+  <!-- Dex Modal -->
+  <div id="dexModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>大陸怪獸圖鑑 (#001 ~ #014)</span>
+        <button class="modal-close-btn" onclick="window.game.closeModal()">✕</button>
+      </div>
+      <div class="modal-body" id="dexList"></div>
+    </div>
+  </div>
+
+  <!-- Shop Modal -->
+  <div id="shopModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>溪流村道具屋 (持有金幣: <span id="shopCoins">0</span> 元)</span>
+        <button class="modal-close-btn" onclick="window.game.closeModal()">✕</button>
+      </div>
+      <div class="modal-body" id="shopList"></div>
+    </div>
+  </div>
+
+  <!-- Game Ending / Hall of Fame Modal -->
+  <div id="endingModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>🎉 大陸榮譽殿堂 · 通關結局 🎉</span>
+      </div>
+      <div class="modal-body">
+        <div class="ending-banner">恭喜安東尼擊敗暗影總帥莫爾加斯！</div>
+        <p style="font-size:12px; line-height:1.5; color:#cbd5e1; margin-bottom:12px;">
+          暗夜魔龍的陰影徹底消散，破曉的聖光重新灑滿大地！<br>
+          創世神獸艾克西翁賜予了安東尼與他的夥伴們至高的勇者祝福。<br>
+          你們的名字將永遠銘刻在冒險者的歷史之中！
+        </p>
+        <div style="font-weight:bold; margin-bottom:6px; color:#facc15;">榮譽冠軍隊伍：</div>
+        <div id="hallOfFameList"></div>
+        <hr style="border-color:#334155; margin:12px 0;">
+        <div style="text-align:center; font-size:11px; color:#94a3b8; line-height:1.6;">
+          製作：DeepMind & Anthony Adventure Team<br>
+          特別感謝所有熱愛 RPG 的訓練家！<br>
+          ~ 遊戲通關已自動存檔，可繼續在各地圖自由收集全部 14 隻怪獸 ~
+        </div>
+        <button class="title-menu-btn" style="width:100%; margin-top:12px;" onclick="document.getElementById('endingModal').style.display='none'; window.game.returnToOverworld();">繼續自由探索</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="./js/audio.js"></script>
+  <script src="./js/data.js"></script>
+  <script src="./js/sprites.js"></script>
+  <script src="./js/map.js"></script>
+  <script src="./js/battle.js"></script>
+  <script src="./js/game.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      window.game = new Game();
+      window.game.start();
+
+      // Hook Title Screen Buttons
+      document.getElementById('newGameBtn').onclick = () => {
+        window.game.audio.unlock();
+        window.game.newGame();
+      };
+      document.getElementById('continueBtn').onclick = () => {
+        window.game.audio.unlock();
+        window.game.loadGame();
+      };
+
+      // Hook Battle Command Buttons
+      document.getElementById('cmdFight').onclick = () => {
+        window.game.vibrate(15);
+        window.game.battleEngine.handleCommand('fight');
+      };
+      document.getElementById('cmdBag').onclick = () => {
+        window.game.vibrate(15);
+        window.game.battleEngine.handleCommand('bag');
+      };
+      document.getElementById('cmdParty').onclick = () => {
+        window.game.vibrate(15);
+        window.game.battleEngine.handleCommand('party');
+      };
+      document.getElementById('cmdRun').onclick = () => {
+        window.game.vibrate(15);
+        window.game.battleEngine.handleCommand('run');
+      };
+    });
+  </script>
+</body>
+</html>

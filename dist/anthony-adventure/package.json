@@ -1,0 +1,12 @@
+{
+  "name": "anthony-adventure-rpg",
+  "version": "1.0.0",
+  "description": "Mobile-first Pokémon-style retro RPG 《安東尼大冒險》 built with HTML5 Canvas, Web Audio API, and zero external dependencies",
+  "scripts": {
+    "start": "npx serve . -p 3000",
+    "check": "node --check js/audio.js && node --check js/data.js && node --check js/sprites.js && node --check js/map.js && node --check js/battle.js && node --check js/game.js"
+  },
+  "keywords": ["rpg", "pokemon-style", "mobile-game", "canvas", "web-audio", "chiptune"],
+  "author": "Antigravity",
+  "license": "MIT"
+}

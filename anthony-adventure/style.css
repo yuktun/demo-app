@@ -1,0 +1,539 @@
+/**
+ * Anthony's Adventure (安東尼大冒險)
+ * Mobile-First Retro Handheld Styling & Android Chrome Optimizations
+ */
+
+:root {
+  --bg-casing: #2b3137;
+  --bg-casing-accent: #1e2227;
+  --screen-bezel: #111417;
+  --dpad-color: #212529;
+  --dpad-hover: #343a40;
+  --btn-a: #e53935;
+  --btn-b: #fb8c00;
+  --text-main: #f8f9fa;
+  --font-retro: 'Courier New', Courier, monospace, system-ui;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #121417;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+/* Handheld Console Shell */
+.console-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 480px;
+  height: 100%;
+  margin: 0 auto;
+  background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
+  padding: env(safe-area-inset-top, 8px) 12px env(safe-area-inset-bottom, 12px) 12px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  position: relative;
+}
+
+/* Screen Area */
+.screen-housing {
+  width: 100%;
+  flex: 1;
+  max-height: 58%;
+  background: var(--screen-bezel);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.9), 0 2px 4px rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.screen-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 4px 4px 4px;
+  color: #9ca3af;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.power-led {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  margin-right: 4px;
+}
+
+.canvas-container {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  background-color: #000;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#gameCanvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Dialog Box Overlay */
+.dialog-overlay {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  right: 6px;
+  min-height: 52px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 3px solid #1e293b;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #0f172a;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 20;
+}
+
+.dialog-indicator {
+  position: absolute;
+  right: 8px;
+  bottom: 4px;
+  animation: bounce 0.8s infinite;
+  color: #e11d48;
+  font-size: 12px;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Battle Controls Overlay */
+.battle-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: rgba(15, 23, 42, 0.95);
+  border-top: 2px solid #334155;
+  display: none;
+  flex-direction: column;
+  padding: 4px 8px;
+  z-index: 15;
+}
+
+.battle-cmd-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 6px;
+  height: 100%;
+}
+
+.cmd-btn {
+  background: #334155;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.cmd-fight { background: #dc2626; }
+.cmd-bag { background: #2563eb; }
+.cmd-party { background: #16a34a; }
+.cmd-run { background: #4b5563; }
+
+.battle-moves-grid {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  height: 100%;
+}
+
+.move-btn {
+  background: #1e293b;
+  border: 1px solid #475569;
+  border-radius: 4px;
+  color: #f8fafc;
+  font-size: 11px;
+  padding: 4px;
+  text-align: left;
+}
+
+.move-btn:active {
+  background: #3b82f6;
+}
+
+.battle-text {
+  display: none;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 6px;
+}
+
+/* Lower Controls Area */
+.controls-housing {
+  width: 100%;
+  flex: 1;
+  max-height: 42%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 8px 10px;
+}
+
+/* Utility buttons toolbar */
+.utility-bar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.util-btn {
+  background: #374151;
+  border: 1px solid #4b5563;
+  color: #d1d5db;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 5px 12px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.util-btn:active, .util-btn.active {
+  background: #6366f1;
+  color: #ffffff;
+}
+
+/* Main Joypad area (D-pad + Action Buttons) */
+.joypad-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 8px;
+}
+
+/* Virtual 8-way Cross D-Pad */
+.dpad-container {
+  width: 130px;
+  height: 130px;
+  position: relative;
+}
+
+.dpad-cross {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.dpad-up, .dpad-down, .dpad-left, .dpad-right {
+  position: absolute;
+  background: linear-gradient(145deg, #2b3137, #1b1e22);
+  border: 1px solid #374151;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+.dpad-up {
+  top: 0;
+  left: 43px;
+  width: 44px;
+  height: 48px;
+}
+
+.dpad-down {
+  bottom: 0;
+  left: 43px;
+  width: 44px;
+  height: 48px;
+}
+
+.dpad-left {
+  top: 43px;
+  left: 0;
+  width: 48px;
+  height: 44px;
+}
+
+.dpad-right {
+  top: 43px;
+  right: 0;
+  width: 48px;
+  height: 44px;
+}
+
+.dpad-center {
+  position: absolute;
+  top: 43px;
+  left: 43px;
+  width: 44px;
+  height: 44px;
+  background: #212529;
+}
+
+/* Tilted Action Buttons (A & B) */
+.action-buttons {
+  display: flex;
+  gap: 16px;
+  transform: rotate(-18deg);
+  margin-right: 8px;
+}
+
+.action-btn {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+}
+
+.action-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.btn-b-style {
+  background: radial-gradient(circle at 35% 35%, #fb8c00, #c66900);
+}
+
+.btn-a-style {
+  background: radial-gradient(circle at 35% 35%, #f43f5e, #be123c);
+  margin-top: -12px;
+}
+
+/* Modals & Overlays */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  padding: 16px;
+}
+
+.modal-content {
+  background: #1e293b;
+  border: 2px solid #3b82f6;
+  border-radius: 12px;
+  width: 95%;
+  max-height: 85%;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+}
+
+.modal-header {
+  padding: 10px 14px;
+  background: #0f172a;
+  border-bottom: 1px solid #334155;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.modal-body {
+  padding: 12px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Starter Selection Cards */
+.starter-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.starter-card {
+  background: #334155;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.starter-card button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+/* Party & Dex Cards */
+.party-mon-card, .dex-entry, .shop-row, .bag-item-row {
+  background: #334155;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.use-item-btn, .buy-btn {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+/* Toast Notification */
+.toast {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.95);
+  color: #38bdf8;
+  border: 1px solid #0284c7;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 60;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+/* Title Screen Styling */
+.title-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+.title-logo {
+  font-size: 26px;
+  font-weight: 900;
+  color: #facc15;
+  text-shadow: 0 4px 12px rgba(250, 204, 21, 0.4), 2px 2px 0 #b45309;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.title-sub {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 24px;
+}
+
+.title-menu-btn {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 6px 0;
+  width: 180px;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
+}
+
+.title-menu-btn:active {
+  transform: scale(0.97);
+}
+
+/* Hall of Fame / Ending Styling */
+.ending-banner {
+  font-size: 18px;
+  font-weight: bold;
+  color: #f59e0b;
+  text-align: center;
+  margin-bottom: 12px;
+}

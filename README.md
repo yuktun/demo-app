@@ -7,6 +7,7 @@ A showcase repository containing various standalone demo applications and intera
 | Application | Directory | Description | Platform |
 |---|---|---|---|
 | **Void Striker** 🚀 | [`space-shooter/`](./space-shooter/) | Retro-futuristic arcade space shooting game (HTML5 Canvas + Procedural Web Audio) | Desktop & Mobile (iOS Safari / PWA) |
+| **安東尼大冒險** ⚔️ | [`anthony-adventure/`](./anthony-adventure/) | Pokémon-style mobile web RPG (Monster collection, exploration & turn-based combat) | Mobile (Android Chrome / iOS) & Desktop |
 | **聽頁 · 中文朗讀** 📖 | [`dist/`](./dist/) | Dependency-free, mobile-first Chinese text reader with speech synthesis | Desktop & Mobile |
 
 ---
@@ -83,7 +84,12 @@ This repository hosts multiple independent apps. Put every newly requested app i
 
 The independent [English practice app](dist/english/) provides short sessions with Traditional Chinese support. See [its README](dist/english/README.md) for local setup, storage limits and checks.
 
-
 ## Starlight Isles adventure
 
 The independent [安東尼大冒險 app](dist/adventure/) adds an original mobile creature-catching adventure. See [its README](dist/adventure/README.md) for preview steps, controls, save behavior and tests.
+
+## 安東尼大冒險 (Anthony's Adventure RPG)
+
+The independent [Anthony's Adventure RPG](anthony-adventure/) lives at `anthony-adventure/` (and mirrored at `dist/anthony-adventure/`).
+- **Demo Link**: [Open Anthony's Adventure](https://yuktun.github.io/demo-app/anthony-adventure/)
+- **Features**: Original storyline from Maple Town to the Apex Temple, 14 original monsters, turn-based combat, capture mechanics, evolutions, procedural Web Audio synthesizer, and tactile mobile controls optimized for Android Chrome.
