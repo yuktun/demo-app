@@ -1,3 +1,16 @@
+# Demo App Collection 🚀
+
+A showcase repository containing various standalone demo applications and interactive web experiments.
+
+## 📁 Apps Directory
+
+| Application | Directory | Description | Platform |
+|---|---|---|---|
+| **Void Striker** 🚀 | [`space-shooter/`](./space-shooter/) | Retro-futuristic arcade space shooting game (HTML5 Canvas + Procedural Web Audio) | Desktop & Mobile (iOS Safari / PWA) |
+| **聽頁 · 中文朗讀** 📖 | [`dist/`](./dist/) | Dependency-free, mobile-first Chinese text reader with speech synthesis | Desktop & Mobile |
+
+---
+
 # 聽頁 · 中文朗讀
 
 A dependency-free, mobile-first Chinese text reader. Traditional Chinese (Hong Kong) interface, local text import, automatic chapters and browser-provided speech.

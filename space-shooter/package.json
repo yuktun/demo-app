@@ -1,0 +1,11 @@
+{
+  "name": "void-striker-space-shooter",
+  "version": "1.0.0",
+  "description": "High-octane retro-futuristic arcade space shooting game built with HTML5 Canvas and Web Audio API",
+  "scripts": {
+    "start": "npx serve . -p 3000"
+  },
+  "keywords": ["game", "space-shooter", "arcade", "canvas", "web-audio"],
+  "author": "",
+  "license": "MIT"
+}

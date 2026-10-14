@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Void Striker">
+  <meta name="theme-color" content="#05070f">
+  <title>VOID STRIKER // Retro Space Combat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Scanline CRT Effect Filter -->
+  <div class="scanlines"></div>
+
+  <!-- Main Arcade Container -->
+  <div id="game-container">
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- In-Game HUD -->
+    <div id="hud" class="hidden">
+      <div class="hud-top-bar">
+        <!-- Vitals: Shield & Hull -->
+        <div class="hud-vitals">
+          <div class="gauge-row">
+            <span class="gauge-name shield">SHIELD</span>
+            <div class="gauge-track">
+              <div id="hud-shield-fill" class="gauge-fill shield" style="width: 100%;"></div>
+            </div>
+          </div>
+          <div class="gauge-row">
+            <span class="gauge-name hull">HULL</span>
+            <div class="gauge-track">
+              <div id="hud-health-fill" class="gauge-fill hull" style="width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Current Sector / Wave -->
+        <div class="hud-stat-box">
+          <div class="hud-label">ZONE</div>
+          <div id="hud-wave" class="hud-value purple">SECTOR 1</div>
+        </div>
+
+        <!-- Score & High Score -->
+        <div class="hud-stat-box" style="text-align: right;">
+          <div class="hud-label">SCORE / RECORD</div>
+          <div id="hud-score" class="hud-value">0</div>
+          <div id="hud-high-score" class="hud-value gold" style="font-size: 13px; opacity: 0.85;">0</div>
+        </div>
+
+        <!-- Mobile Pause Button -->
+        <button id="btn-mobile-pause" class="mobile-hud-btn" title="Pause Game">⏸️</button>
+      </div>
+
+      <!-- Combo Indicator -->
+      <div id="hud-combo" style="opacity: 0;">COMBO x1</div>
+
+      <!-- Dreadnought Boss Bar (Appears on Boss Waves) -->
+      <div id="hud-boss-bar-container" class="hidden">
+        <div class="boss-title">⚠️ WARNING: DREADNOUGHT TITAN ⚠️</div>
+        <div class="boss-track">
+          <div id="hud-boss-bar-fill"></div>
+        </div>
+      </div>
+
+      <!-- Active Powerups & Bombs -->
+      <div class="hud-bottom-bar">
+        <div id="hud-powerups"></div>
+        <div id="hud-bombs" title="Tap to Detonate EMP Bomb">
+          <span class="bomb-pip">💣</span>
+          <span class="bomb-pip">💣</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Dedicated EMP Bomb Button -->
+    <button id="btn-mobile-bomb" class="mobile-bomb-btn hidden" title="Detonate EMP Bomb">
+      <span class="bomb-icon">💣</span>
+      <span class="bomb-text">EMP</span>
+    </button>
+
+    <!-- Quick Audio & Auto-fire Toggles -->
+    <div class="hud-toggles">
+      <button id="btn-autofire-toggle" class="toggle-btn" title="Toggle Auto-Fire (Shortcut: F)">⚡ AUTO-FIRE: ON</button>
+      <button id="btn-sound-toggle" class="toggle-btn" title="Toggle Sound">🔊 SOUND: ON</button>
+    </div>
+
+    <!-- Screen 1: Start / Menu Screen -->
+    <div id="menu-screen" class="overlay-screen">
+      <div class="game-title">VOID STRIKER</div>
+      <div class="game-subtitle">RETRO ARCADE SPACE COMBAT</div>
+
+      <div class="ship-preview-box">
+        <svg class="ship-icon-svg" viewBox="0 0 40 40" fill="none">
+          <polygon points="20,4 28,16 38,30 28,34 24,30 24,36 20,32 16,36 16,30 12,34 2,30 12,16" fill="#0f172a" stroke="#00f0ff" stroke-width="2" />
+          <ellipse cx="20" cy="18" rx="3" ry="6" fill="#38bdf8" />
+        </svg>
+      </div>
+
+      <div class="info-card">
+        <div class="control-row">
+          <span class="control-desc">Maneuver Vessel:</span>
+          <span class="control-key">W A S D / Arrows / Mouse</span>
+        </div>
+        <div class="control-row">
+          <span class="control-desc">Fire Cannons:</span>
+          <span class="control-key">SPACE / Left Click / Auto</span>
+        </div>
+        <div class="control-row">
+          <span class="control-desc">EMP Smart Bomb:</span>
+          <span class="control-key">B / X / Right Click</span>
+        </div>
+        <div class="control-row">
+          <span class="control-desc">Toggle Auto-Fire / Pause:</span>
+          <span class="control-key">F / ESC / P</span>
+        </div>
+      </div>
+
+      <button id="btn-start" class="arcade-btn">LAUNCH MISSION</button>
+    </div>
+
+    <!-- Screen 2: Pause Screen -->
+    <div id="pause-screen" class="overlay-screen hidden">
+      <div class="game-title" style="font-size: 32px;">SYSTEM PAUSED</div>
+      <p style="color: #94a3b8; margin-bottom: 24px;">Combat simulation frozen</p>
+      <button id="btn-resume" class="arcade-btn">RESUME COMBAT</button>
+      <button id="btn-pause-restart" class="arcade-btn secondary">ABORT & RESTART</button>
+    </div>
+
+    <!-- Screen 3: Game Over Screen -->
+    <div id="game-over-screen" class="overlay-screen hidden">
+      <div id="new-high-score-banner" class="new-high-score hidden">🏆 NEW RECORD ESTABLISHED! 🏆</div>
+      <div class="game-title" style="font-size: 36px; color: #f43f5e; text-shadow: 0 0 20px #f43f5e;">MISSION FAILED</div>
+      <p style="color: #94a3b8; margin-bottom: 20px;">Vessel Hull Critical Integrity Depleted</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="hud-label">FINAL SCORE</div>
+          <div id="go-final-score" class="hud-value">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="hud-label">RECORD HIGH</div>
+          <div id="go-high-score" class="hud-value gold">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="hud-label">SECTORS SECURED</div>
+          <div id="go-waves" class="hud-value purple">1</div>
+        </div>
+        <div class="stat-card">
+          <div class="hud-label">TARGETS DESTROYED</div>
+          <div id="go-enemies" class="hud-value">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="hud-label">MAX COMBO STREAK</div>
+          <div id="go-combo" class="hud-value" style="color: #ff00aa;">x1</div>
+        </div>
+        <div class="stat-card">
+          <div class="hud-label">ACCURACY RATING</div>
+          <div id="go-accuracy" class="hud-value" style="color: #10b981;">0%</div>
+        </div>
+      </div>
+
+      <button id="btn-restart" class="arcade-btn">REDEPLOY VESSEL</button>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/entities.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
