@@ -82,3 +82,8 @@ This repository hosts multiple independent apps. Put every newly requested app i
 ## English practice
 
 The independent [English practice app](dist/english/) provides short sessions with Traditional Chinese support. See [its README](dist/english/README.md) for local setup, storage limits and checks.
+
+
+## Starlight Isles adventure
+
+The independent [安東尼大冒險 app](dist/adventure/) adds an original mobile creature-catching adventure. See [its README](dist/adventure/README.md) for preview steps, controls, save behavior and tests.
