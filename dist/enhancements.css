@@ -29,6 +29,24 @@ body {
   touch-action: manipulation;
 }
 
+.top-start {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+@media (max-width: 720px) {
+  .top-start {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 370px) {
+  #chapters-toggle {
+    padding-inline: 6px;
+  }
+}
+
 .sidebar {
   overscroll-behavior-y: contain;
   scrollbar-gutter: stable;

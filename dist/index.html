@@ -7,13 +7,16 @@
   <title>聽頁 · 中文朗讀</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23314438'/%3E%3Cpath d='M16 18h13c5 0 7 3 7 6v26c-3-4-7-5-20-5zm32 0H35v25c5-2 8-2 13-2z' fill='%23f5f3eb'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./enhancements.css?v=20261008-3">
-  <script type="module" src="./app.js?v=20261008-3"></script>
+  <link rel="stylesheet" href="./enhancements.css?v=20261018-1">
+  <script type="module" src="./app.js?v=20261018-1"></script>
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="./" aria-label="聽頁首頁"><span class="brand-mark" aria-hidden="true">聽</span><span>聽頁<small>一頁，一段，一個故事。</small></span></a>
-    <div class="top-actions"><a class="text-button" href="./adventure/">安東尼大冒險 ↗</a><button class="plain mobile-only" id="chapters-toggle" aria-label="開啟章節目錄">☷ <span>目錄</span></button><button class="import-button" id="open-import"><span aria-hidden="true">＋</span> 匯入書本</button></div>
+    <div class="top-start">
+      <button class="plain mobile-only" id="chapters-toggle" aria-label="開啟章節目錄" aria-controls="sidebar" aria-expanded="false"><span aria-hidden="true">☷</span> <span>目錄</span></button>
+      <a class="brand" href="./" aria-label="聽頁首頁"><span class="brand-mark" aria-hidden="true">聽</span><span>聽頁<small>一頁，一段，一個故事。</small></span></a>
+    </div>
+    <div class="top-actions"><button class="import-button" id="open-import"><span aria-hidden="true">＋</span> 匯入書本</button></div>
   </header>
   <main class="layout">
     <aside class="sidebar" aria-label="章節目錄" id="sidebar">
