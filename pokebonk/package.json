@@ -1,0 +1,14 @@
+{
+  "name": "pokebonk-local",
+  "version": "1.0.0",
+  "description": "PokéBonk - Local Play Server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js --open",
+    "serve": "node server.js",
+    "download": "python download_all_assets.py"
+  },
+  "keywords": ["pokebonk", "pokemon", "survivor"],
+  "author": "",
+  "license": "ISC"
+}

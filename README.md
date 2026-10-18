@@ -6,6 +6,7 @@ A showcase repository containing various standalone demo applications and intera
 
 | Application | Directory | Description | Platform |
 |---|---|---|---|
+| **PokéBonk** ⚡ | [`pokebonk/`](./pokebonk/) | 3D browser-based Pokémon roguelite horde survivor game (Offline & local play) | Desktop & Mobile |
 | **Void Striker** 🚀 | [`space-shooter/`](./space-shooter/) | Retro-futuristic arcade space shooting game (HTML5 Canvas + Procedural Web Audio) | Desktop & Mobile (iOS Safari / PWA) |
 | **安東尼大冒險** ⚔️ | [`anthony-adventure/`](./anthony-adventure/) | Pokémon-style mobile web RPG (Monster collection, exploration & turn-based combat) | Mobile (Android Chrome / iOS) & Desktop |
 | **聽頁 · 中文朗讀** 📖 | [`dist/`](./dist/) | Dependency-free, mobile-first Chinese text reader with speech synthesis | Desktop & Mobile |
