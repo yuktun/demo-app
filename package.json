@@ -11,6 +11,7 @@
     "test:practice:overlay": "node tests/overlay-browser.mjs && node tests/overlay-review-browser.mjs",
     "test:adventure": "node --test tests/adventure.test.mjs",
     "check:adventure": "node --check dist/adventure/app.mjs && node --check dist/adventure/core.mjs && node --check dist/adventure/data.mjs && node --check dist/adventure/art.mjs",
-    "test:adventure:browser": "node tests/adventure-browser.mjs"
+    "test:adventure:browser": "node tests/adventure-browser.mjs",
+    "test:reader:background": "node tests/background-browser.mjs"
   }
 }

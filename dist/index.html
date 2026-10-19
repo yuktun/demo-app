@@ -8,7 +8,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23314438'/%3E%3Cpath d='M16 18h13c5 0 7 3 7 6v26c-3-4-7-5-20-5zm32 0H35v25c5-2 8-2 13-2z' fill='%23f5f3eb'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./enhancements.css?v=20261018-1">
-  <script type="module" src="./app.js?v=20261018-1"></script>
+  <script type="module" src="./app.js?v=20261019-1"></script>
 </head>
 <body>
   <header class="topbar">
@@ -49,7 +49,7 @@
     <div class="player-information"><span class="sound-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div><p id="player-chapter">準備好，慢慢聽</p><span id="player-status" role="status" aria-live="polite">請按播放</span></div></div>
     <div class="transport"><button class="icon-button" id="restart" aria-label="重新朗讀本章" title="重新朗讀本章">↺</button><button class="icon-button" id="previous-segment" aria-label="上一段" title="上一段"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5l-10 7 10 7z"/></svg></button><button class="play-button" id="play" aria-label="開始朗讀" title="開始朗讀"><svg id="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg><svg id="pause-icon" hidden viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/></svg></button><button class="icon-button" id="next-segment" aria-label="下一段" title="下一段"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l10 7-10 7z"/></svg></button><button class="icon-button" id="stop" aria-label="停止朗讀，保留本段位置" title="停止朗讀"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1"/></svg></button></div>
     <div class="player-options"><button id="speed-button" class="speed-button">1.0×</button><button id="voice-button" class="voice-button">選擇語音</button></div>
-    <p class="foreground-note">請保持頁面開啟；鎖屏或切換 App 可能中斷朗讀。</p>
+    <p class="foreground-note">可嘗試切換分頁或最小化視窗繼續朗讀；請勿關閉頁面。鎖屏或系統休眠仍可能中斷。</p>
   </section>
   <div id="notice" class="notice" role="status" hidden></div>
   <dialog id="import-dialog"><div class="dialog-heading"><div><span class="eyebrow">打開一個故事</span><h2>匯入書本</h2></div><button class="plain close-dialog" aria-label="關閉">✕</button></div>
@@ -68,6 +68,6 @@
     <label class="check-label"><input type="checkbox" id="auto-follow" checked><span>閱讀畫面跟隨朗讀位置</span></label><div class="privacy-box">語音是否可用取決於你的裝置和瀏覽器。只列出瀏覽器標示為本機的中文語音，不會自動改用網上語音。如沒有語音，可在 iPhone「設定 → 輔助使用」的朗讀／閱讀語音選項下載中文語音，再重新開啟頁面；瀏覽器未必會提供所有已下載語音。</div>
   </dialog>
   <dialog id="delete-dialog"><div class="dialog-heading"><div><span class="eyebrow">從我的閱讀移除</span><h2>刪除書本？</h2></div><button class="plain close-dialog" aria-label="關閉">✕</button></div><p class="muted">確定刪除《<span id="delete-book-title"></span>》？這會同時移除儲存在此瀏覽器的書本內容及閱讀進度，無法復原。</p><p class="inline-error" id="delete-error" role="alert" hidden></p><div class="dialog-actions"><button class="secondary-button close-dialog" type="button">取消</button><button class="primary-button danger-primary" id="confirm-delete" type="button">確認刪除</button></div></dialog>
-  <dialog id="about-dialog"><div class="dialog-heading"><h2>安心讀，記得留底。</h2><button class="plain close-dialog" aria-label="關閉">✕</button></div><div class="about-copy"><h3>留在這個瀏覽器</h3><p>匯入的書本儲存在本機瀏覽器資料庫，閱讀位置和設定也保留在這裏。本頁不會把你匯入或貼上的文字上傳至伺服器，亦沒有分析追蹤。</p><h3>不是備份，也不會同步</h3><p>另一部裝置或另一個瀏覽器不會有同一本書。清除瀏覽資料、私人瀏覽模式或儲存空間不足，都可能令記錄消失。請保留你的原始檔案。</p><h3>前景朗讀</h3><p>本頁使用瀏覽器提供的中文語音，只啟用其標示為本機的語音。請保持頁面開啟。鎖屏、切換 App 或來電可能中斷；回來後按播放繼續，可能重讀少量文字。不保證離線或背景播放。</p><h3>文字檔支援</h3><p>支援 TXT 和純文字 Markdown，可辨認「第一章」「第 12 回」等常見章節標題。PDF、EPUB、Word 檔案暫未支援，請先轉成純文字。</p></div></dialog>
+  <dialog id="about-dialog"><div class="dialog-heading"><h2>安心讀，記得留底。</h2><button class="plain close-dialog" aria-label="關閉">✕</button></div><div class="about-copy"><h3>留在這個瀏覽器</h3><p>匯入的書本儲存在本機瀏覽器資料庫，閱讀位置和設定也保留在這裏。本頁不會把你匯入或貼上的文字上傳至伺服器，亦沒有分析追蹤。</p><h3>不是備份，也不會同步</h3><p>另一部裝置或另一個瀏覽器不會有同一本書。清除瀏覽資料、私人瀏覽模式或儲存空間不足，都可能令記錄消失。請保留你的原始檔案。</p><h3>持續朗讀</h3><p>本頁使用瀏覽器提供的中文語音，只啟用其標示為本機的語音。請保持頁面開啟。切換分頁或最小化視窗時，會嘗試繼續朗讀。鎖屏、系統休眠、來電或瀏覽器暫停頁面仍可能中斷；請返回頁面後按播放繼續，可能由上一個字詞或本段重讀。不保證手機鎖屏或離線播放。</p><h3>文字檔支援</h3><p>支援 TXT 和純文字 Markdown，可辨認「第一章」「第 12 回」等常見章節標題。PDF、EPUB、Word 檔案暫未支援，請先轉成純文字。</p></div></dialog>
   <noscript><p class="noscript">請開啟 JavaScript 以使用匯入及朗讀功能。</p></noscript>
 </body></html>

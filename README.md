@@ -43,12 +43,12 @@ This artifact is independent. Do not read or depend on existing application data
 
 - UTF-8, Big5 and GB18030/GBK text-file decoding. TXT and plain-text Markdown only.
 - Chinese numbered chapter headings, English `Chapter N`, and common preface/epilogue headings.
-- Foreground continuous speech across segments and chapters, with play, pause, stop, previous/next segment, chapter restart, speed, local Chinese voice choice and preview.
+- Continuous speech across segments and chapters, with play, pause, stop, previous/next segment, chapter restart, speed, local Chinese voice choice and preview.
 - Segment highlighting, optional auto-follow, font size control, responsive mobile chapter drawer.
 - Multiple books in IndexedDB; each book's reading position and preferences in localStorage. A book picker in the chapter drawer switches between saved books, and imported books can be deleted locally.
 - Browser voices are allowed only when `localService === true` and the language is Chinese/Cantonese. No remote voice option or silent remote fallback.
 - Speech callbacks and timers are guarded by a generation and current utterance identity. Cancels never advance reading. A stalled utterance pauses for manual retry.
-- The page pauses when hidden. It does not promise lock-screen, background or offline playback.
+- Tab switching and minimizing no longer pause reading. Background speech is best effort and depends on the browser/OS keeping the page and speech engine active. Closing/navigating away still pauses and saves position. Returning never restarts speech automatically after user pause/stop or an interruption. Lock-screen, sleep, discarded tabs and mobile background playback are not guaranteed.
 - A restrictive content security policy disallows network requests from app JavaScript. Imported text is not uploaded; local storage is not a backup or device sync.
 
 ## Validation performed
@@ -63,10 +63,20 @@ No actual iPhone, browser speech engine, DOM visual rendering, or WebMCP runtime
 
 ## Remaining device checks
 
+Background lifecycle acceptance can be run with `npm run test:reader:background`
+and an installed Playwright package (`PLAYWRIGHT_PATH`) / Chromium browser
+(`BROWSER_PATH`). Its default mode uses synthetic speech and visibility events
+to verify sequencing, explicit controls, interruption recovery and persistence.
+Set `NATIVE_SPEECH=1` to open an isolated headed browser and test real window
+minimize/restore and native local Chinese speech when available. Reports clearly
+separate native-engine observations from mocks. Audible output, phone lock-screen,
+sleep and tab-discard behavior still require device validation. Set
+`BACKGROUND_QA_DIR` outside the repository for local reports/screenshots.
+
 1. Open at approximately 390 px and desktop width; check dialogs, chapter drawer, touch targets and scroll/fixed-player overlap.
 2. Import a real UTF-8 Chinese TXT; try Big5/GB18030 files using the corresponding selector; reject a PDF/empty/garbled file.
 3. Confirm actual local voices. Tap Play, repeatedly pause/play/skip, change speed/voice, move chapters, and complete the final chapter.
-4. Lock screen, switch apps, receive an interruption, return and tap Play. Expect foreground-only and possible repetition of the current phrase.
+4. On Windows, start speech then switch tabs or minimize/restore the browser. Expect continued speech where the browser supports it; no new utterance should be queued merely on restore. Test explicit pause/stop, chapter transitions and interruption followed by manual Play. Lock-screen/sleep/mobile background behavior remains platform-dependent. An interruption may repeat from the last reported word boundary, or the current segment if the engine supplies no boundaries.
 5. Refresh and verify book, chapter/segment, completion state and preferences. Test private browsing, unavailable IndexedDB and localStorage quota failure; the reading session must remain usable and clearly report unsaved state.
 6. Optional WebMCP chapter-navigation tool is feature-detected. Validate only in a permitted browser exposing `document.modelContext`; unsupported browsers do not need it.
 
