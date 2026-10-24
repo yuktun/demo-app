@@ -5,13 +5,16 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "check": "node --check dist/app.js && node --check dist/core.js && node --check dist/transit/app.js && node --check dist/transit/core.js && node --check dist/transit/map-core.js && node --check dist/transit/route-map.js && node --check dist/transit/joint-core.js && node --check dist/transit/joint-eta.js && node --check dist/english/app.js && node --check dist/english/core.js && node --check dist/english/curriculum.js && node --check dist/practice/overlay.js && node --check dist/practice/overlay-core.js && node --check dist/practice/overlay-demo.js && npm run check:adventure",
+    "check": "node --check dist/app.js && node --check dist/core.js && node --check dist/transit/app.js && node --check dist/transit/core.js && node --check dist/transit/map-core.js && node --check dist/transit/route-map.js && node --check dist/transit/joint-core.js && node --check dist/transit/joint-eta.js && node --check dist/english/app.js && node --check dist/english/core.js && node --check dist/english/curriculum.js && node --check dist/practice/overlay.js && node --check dist/practice/overlay-core.js && node --check dist/practice/overlay-demo.js && npm run check:adventure && node --check dist/matters.js && node --check dist/matters-config.js && node --check importer/extract.mjs && node --check importer/handler.mjs && node --check importer/server.mjs",
     "test:transit:live": "node tests/transit-live.mjs",
     "test:english:browser": "node tests/english-browser.mjs",
     "test:practice:overlay": "node tests/overlay-browser.mjs && node tests/overlay-review-browser.mjs",
     "test:adventure": "node --test tests/adventure.test.mjs",
     "check:adventure": "node --check dist/adventure/app.mjs && node --check dist/adventure/core.mjs && node --check dist/adventure/data.mjs && node --check dist/adventure/art.mjs",
     "test:adventure:browser": "node tests/adventure-browser.mjs",
-    "test:reader:background": "node tests/background-browser.mjs"
+    "test:reader:background": "node tests/background-browser.mjs",
+    "test:matters": "npm --prefix importer test",
+    "test:matters:browser": "node tests/matters-browser.mjs",
+    "preview:matters": "npm --prefix importer start"
   }
 }

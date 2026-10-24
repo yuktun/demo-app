@@ -19,6 +19,14 @@ A dependency-free, mobile-first Chinese text reader. Traditional Chinese (Hong K
 
 ## Run
 
+### Matters article URL import (disabled pending setup)
+
+A public-only article importer is included but not enabled. It retains source/author/
+license metadata and reuses the reader's existing storage and TTS. Production
+URL import remains disabled pending a permitted retrieval route and an approved
+service host. See [importer setup and limits](importer/README.md). Paste and TXT/
+Markdown import continue to work without any article service.
+
 Serve `dist/` over HTTP or HTTPS. For example:
 
 ```sh

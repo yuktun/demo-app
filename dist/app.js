@@ -1,5 +1,9 @@
 import { SAMPLE, parseBook, bookProgress, storedBookMatches, localChineseVoices, chooseVoice, SpeechPlayer } from './core.js?v=20261008-3';
+import {MattersRequest,mattersURL,mattersBookId,sourceMetadata,licenseInfo,MATTERS_ERRORS} from './matters.js?v=20261018-1';
+import {MATTERS_ENDPOINT} from './matters-config.js';
 const $=id=>document.getElementById(id);
+const mattersRequest=new MattersRequest({endpoint:MATTERS_ENDPOINT});
+let mattersRun=0;let mattersPending=false;
 const KEY='tingye-reader-v1';
 let saved={};let storageOkay=true;let database=null;let bookIsSaved=true;let importing=false;
 try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch{storageOkay=false;}
@@ -18,13 +22,13 @@ function clearPreview(){if(preview){preview=null;try{window.speechSynthesis?.can
 function refreshVoices(){const voice=getVoice();const local=localChineseVoices(voices);const select=$('voice-select');select.replaceChildren();for(const v of local){const o=document.createElement('option');o.value=v.voiceURI;o.textContent=`${v.name} · ${v.lang}`;select.append(o);}if(!local.length){const o=document.createElement('option');o.value='';o.textContent='暫未找到本機中文語音';select.append(o);}else{select.value=voice.voiceURI;preferences.voice=voice.voiceURI;}select.disabled=!local.length;$('preview-voice').disabled=!local.length;$('voice-button').textContent=voice?`${voice.lang.toLowerCase().includes('hk')||voice.lang.toLowerCase().startsWith('yue')?'粵語':'中文'}語音`:'選擇語音';$('voice-help').textContent=voice?'只使用瀏覽器標示為本機的中文語音。':'暫未找到本機中文語音。可先閱讀文字；查看下方說明，再按「重新尋找」。';}
 function renderLibrary(){const select=$('book-select');select.replaceChildren();for(const record of library.values()){const option=document.createElement('option');option.value=record.id;option.textContent=record.sample?`${record.title}（示範）`:record.title;select.append(option);}select.value=bookId;$('library-count').textContent=`書庫 · ${library.size} 本`;const current=library.get(bookId);$('delete-book').hidden=!current||current.sample===true;$('delete-book').setAttribute('aria-label',current&&!current.sample?`刪除《${current.title}》`:'刪除這本書');}
 function renderBook(){
-  renderLibrary();
+  renderLibrary();renderSource();
   $('book-title').textContent=book.title;$('book-meta').textContent=bookId==='sample-v1'?'原創短篇示範 · 約 3 分鐘':`${book.characters.toLocaleString()} 字 · 文字書`;$('chapter-count').textContent=book.chapters.length;
   $('chapter-list').replaceChildren();book.chapters.forEach((chapter,index)=>{const b=document.createElement('button');b.className='chapter-link';b.type='button';b.dataset.chapter=index;const n=document.createElement('span');n.className='chapter-index';n.textContent=String(index+1).padStart(2,'0');const t=document.createElement('span');t.textContent=chapter.title;b.append(n,t);b.addEventListener('click',()=>{seek({chapter:index,segment:0});closeChapters();});$('chapter-list').append(b);});
   renderedChapter=-1;windowStart=0;renderPosition();storageLabel();
 }
 function activateBook(record,bookmark=positions[record.id],stopCurrent=true){clearPreview();if(stopCurrent)player.stop();book=parseBook(record.text,record.title);bookId=record.id;bookIsSaved=record.saved!==false;player.load(book,bookmark?.position);if(bookmark?.ended===true)player.emit('ended');renderBook();persist();}
-function switchBook(id){const record=library.get(id);if(!record||id===bookId)return;persist();bookMutation++;activateBook(record);}
+function switchBook(id){cancelMatters(false);const record=library.get(id);if(!record||id===bookId)return;persist();bookMutation++;activateBook(record);}
 function renderPosition(){
   const pos=player.pos;const chapter=book.chapters[pos.chapter];if(!chapter)return;
   $('chapter-title').textContent=chapter.title;$('chapter-kicker').textContent=`${String(pos.chapter+1).padStart(2,'0')} / ${String(book.chapters.length).padStart(2,'0')}`;$('chapter-number').textContent=`第 ${pos.chapter+1} 章，共 ${book.chapters.length} 章`;
@@ -42,11 +46,51 @@ function setPreferences(){document.documentElement.style.setProperty('--reading-
 function openDialog(id){if(id==='settings-dialog')refreshVoices();$(id).showModal();}
 function closeChapters(){const wasOpen=document.body.classList.contains('chapters-open');$('sidebar-backdrop').hidden=true;document.body.classList.remove('chapters-open');$('chapters-toggle').setAttribute('aria-expanded','false');if(wasOpen)$('chapters-toggle').focus();}
 function openChapters(){$('sidebar-backdrop').hidden=false;document.body.classList.add('chapters-open');$('chapters-toggle').setAttribute('aria-expanded','true');$('chapters-close').focus();}
+function renderSource(){
+  const root=$('article-source');root.replaceChildren();root.hidden=true;
+  try{
+    const raw=library.get(bookId)?.source;if(!raw)return;
+    const source=sourceMetadata(raw);const [label,licenseURL]=licenseInfo(source.license);
+    const link=document.createElement('a');link.href=source.url;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Matters 原文';
+    root.append(document.createTextNode(`作者：${source.author} · `),link,document.createElement('br'));
+    if(licenseURL){const license=document.createElement('a');license.href=licenseURL;license.target='_blank';license.rel='noopener noreferrer';license.textContent=label;root.append(license);}else root.append(document.createTextNode(label));
+    root.append(document.createTextNode(' · 已轉為純文字，未包含圖片及原有排版。'));root.hidden=false;
+  }catch{/* A damaged optional source record never prevents reading a local book. */}
+}
+function cancelMatters(announce=true){
+  const pending=mattersPending;mattersRun++;mattersPending=false;mattersRequest.cancel();
+  $('import-matters').disabled=!MATTERS_ENDPOINT;$('cancel-matters').hidden=true;$('matters-url').removeAttribute('aria-busy');
+  if(pending&&announce)$('matters-status').textContent='已取消讀取，未有匯入文章。';
+}
+async function importMatters(){
+  if(mattersPending||importing)return;
+  $('matters-error').hidden=true;
+  let url;try{url=mattersURL($('matters-url').value);}catch(error){$('matters-error').textContent=error.message;$('matters-error').hidden=false;$('matters-url').focus();return;}
+  const existing=[...library.values()].find(record=>record.source?.provider==='matters'&&record.source.url===url);
+  if(existing){switchBook(existing.id);$('import-dialog').close();showNotice('已開啟書庫入面嘅文章，保留原有閱讀進度。');return;}
+  const run=++mattersRun;const mutation=bookMutation;mattersPending=true;
+  $('import-matters').disabled=true;$('cancel-matters').hidden=false;$('matters-url').setAttribute('aria-busy','true');$('matters-status').textContent='正在讀取公開文章…';
+  try{
+    const article=await mattersRequest.load(url);
+    if(run!==mattersRun||mutation!==bookMutation||!$('import-dialog').open)return;
+    await importBook(article.text,article.title,article.source);
+    $('matters-status').textContent='';
+  }catch(error){if(run!==mattersRun||error.name==='AbortError')return;$('matters-status').textContent='';$('matters-error').textContent=error.message||MATTERS_ERRORS.network;$('matters-error').hidden=false;}
+  finally{if(run===mattersRun){mattersPending=false;$('import-matters').disabled=!MATTERS_ENDPOINT;$('cancel-matters').hidden=true;$('matters-url').removeAttribute('aria-busy');}}
+}
+$('import-matters').disabled=!MATTERS_ENDPOINT;
+if(!MATTERS_ENDPOINT)$('matters-status').textContent=MATTERS_ERRORS.disabled;
+$('import-matters').addEventListener('click',importMatters);
+$('matters-url').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(MATTERS_ENDPOINT)importMatters();}});
+$('matters-url').addEventListener('input',()=>{if(mattersPending)cancelMatters();});
+$('cancel-matters').addEventListener('click',()=>{cancelMatters();$('matters-url').focus();});
+$('import-dialog').addEventListener('close',()=>cancelMatters());
+$('import-dialog').addEventListener('cancel',()=>cancelMatters());
 function dbOpen(){return new Promise((resolve,reject)=>{if(!window.indexedDB){reject(new Error('unavailable'));return;}const req=indexedDB.open('tingye-library',1);req.onupgradeneeded=()=>req.result.createObjectStore('books');req.onerror=()=>reject(req.error);req.onblocked=()=>reject(new Error('blocked'));req.onsuccess=()=>resolve(req.result);});}
 function dbReadAll(){return new Promise((resolve,reject)=>{const req=database.transaction('books').objectStore('books').getAll();req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
 function dbWrite(value){return new Promise((resolve,reject)=>{const tx=database.transaction('books','readwrite');tx.objectStore('books').put(value,value.id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}
 function dbDelete(id){return new Promise((resolve,reject)=>{const tx=database.transaction('books','readwrite');const req=tx.objectStore('books').openCursor();req.onsuccess=()=>{const cursor=req.result;if(!cursor)return;if(storedBookMatches(id,cursor.key,cursor.value))cursor.delete();cursor.continue();};tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}
-async function importBook(text,title){if(importing)return;importing=true;$('import-paste').disabled=true;$('import-error').hidden=true;try{const parsed=parseBook(text,title);bookMutation++;const id=`book-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;const record={id,title:parsed.title,text:parsed.text,saved:false};library.set(id,record);activateBook(record);$('import-dialog').close();$('paste-text').value='';$('paste-title').value='';try{database ||= await dbOpen();await dbWrite({id,title:parsed.title,text:parsed.text});record.saved=true;bookIsSaved=true;storageLabel();showNotice('書本已加入「我的閱讀」，可隨時切換。');}catch{bookIsSaved=false;storageLabel();showNotice('書本已打開，但未能儲存。離開前請保留原始檔案。',true);}}catch(error){$('import-error').textContent=error.message||'未能匯入，請換一個文字檔再試。';$('import-error').hidden=false;}finally{importing=false;$('import-paste').disabled=false;$('book-file').value='';}}
+async function importBook(text,title,source=null){if(importing)return;cancelMatters(false);importing=true;$('import-paste').disabled=true;$('import-error').hidden=true;try{const parsed=parseBook(text,title);if(source)source=sourceMetadata(source);bookMutation++;const id=source?mattersBookId(source.url):`book-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;const record={id,title:parsed.title,text:parsed.text,saved:false,...(source?{source}:{})};library.set(id,record);activateBook(record);$('import-dialog').close();$('paste-text').value='';$('paste-title').value='';try{database ||= await dbOpen();await dbWrite({id,title:parsed.title,text:parsed.text,...(source?{source}:{})});record.saved=true;bookIsSaved=true;storageLabel();showNotice('書本已加入「我的閱讀」，可隨時切換。');}catch{bookIsSaved=false;storageLabel();showNotice('書本已打開，但未能儲存。離開前請保留原始檔案。',true);}}catch(error){$('import-error').textContent=error.message||'未能匯入，請換一個文字檔再試。';$('import-error').hidden=false;}finally{importing=false;$('import-paste').disabled=false;$('book-file').value='';}}
 function openDeleteDialog(){const record=library.get(bookId);if(!record||record.sample)return;$('delete-book-title').textContent=record.title;$('delete-error').hidden=true;openDialog('delete-dialog');}
 async function deleteCurrentBook(){const deletingId=bookId;const record=library.get(deletingId);if(!record||record.sample)return;$('confirm-delete').disabled=true;$('delete-error').hidden=true;try{if(record.saved!==false){database ||= await dbOpen();await dbDelete(deletingId);}player.stop();library.delete(deletingId);delete positions[deletingId];bookMutation++;activateBook(library.get(SAMPLE_ID),positions[SAMPLE_ID],false);$('delete-dialog').close();showNotice(`《${record.title}》已從「我的閱讀」刪除。`);}catch{$('delete-error').textContent='未能刪除這本書，請稍後再試。';$('delete-error').hidden=false;}finally{$('confirm-delete').disabled=false;}}
 $('play').addEventListener('click',()=>{clearPreview();refreshVoices();if(['playing','loading'].includes(player.state))player.pause();else player.play();});
@@ -57,12 +101,12 @@ $('book-select').addEventListener('change',e=>switchBook(e.target.value));
 $('delete-book').addEventListener('click',openDeleteDialog);$('confirm-delete').addEventListener('click',deleteCurrentBook);
 $('font-down').addEventListener('click',()=>{preferences.font=Math.max(18,preferences.font-1);setPreferences();});$('font-up').addEventListener('click',()=>{preferences.font=Math.min(32,preferences.font+1);setPreferences();});$('font-size').addEventListener('input',e=>{preferences.font=Number(e.target.value);setPreferences();});$('rate').addEventListener('input',e=>{preferences.rate=Number(e.target.value);setPreferences();});$('rate').addEventListener('change',()=>{clearPreview();player.reconfigure();});$('auto-follow').addEventListener('change',e=>{preferences.follow=e.target.checked;persist();});$('voice-select').addEventListener('change',e=>{clearPreview();preferences.voice=e.target.value;refreshVoices();persist();player.reconfigure();});$('refresh-voices').addEventListener('click',refreshVoices);
 $('preview-voice').addEventListener('click',()=>{player.pause();clearPreview();refreshVoices();const voice=getVoice();if(!voice)return;try{const u=new SpeechSynthesisUtterance('放慢腳步，聽一頁故事。');u.voice=voice;u.lang=voice.lang;u.rate=preferences.rate;preview=u;u.onend=()=>{if(preview===u)preview=null;};u.onerror=()=>{if(preview===u){preview=null;showNotice('試聽未能完成，請重新選擇語音。');}};speechSynthesis.speak(u);}catch{showNotice('這個瀏覽器未能試聽語音。');}});
-$('import-paste').addEventListener('click',()=>importBook($('paste-text').value,$('paste-title').value.trim()||'我的書本'));$('load-sample').addEventListener('click',()=>{switchBook(SAMPLE_ID);$('import-dialog').close();});$('book-file').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>20*1024*1024)throw new Error('檔案超過 20 MB，請先分成較小的文字檔。');if(!/\.(txt|md)$/i.test(file.name))throw new Error('請選擇 TXT 或純文字 Markdown 檔案。');const buffer=await file.arrayBuffer();const text=new TextDecoder($('encoding').value,{fatal:true}).decode(buffer);await importBook(text,file.name);}catch(error){$('import-error').textContent=error instanceof TypeError?'無法用這種編碼讀取。請換一種編碼，再選擇檔案。':error.message;$('import-error').hidden=false;$('book-file').value='';}});
+$('import-paste').addEventListener('click',()=>importBook($('paste-text').value,$('paste-title').value.trim()||'我的書本'));$('load-sample').addEventListener('click',()=>{switchBook(SAMPLE_ID);$('import-dialog').close();});$('book-file').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;cancelMatters(false);try{if(file.size>20*1024*1024)throw new Error('檔案超過 20 MB，請先分成較小的文字檔。');if(!/\.(txt|md)$/i.test(file.name))throw new Error('請選擇 TXT 或純文字 Markdown 檔案。');const buffer=await file.arrayBuffer();const text=new TextDecoder($('encoding').value,{fatal:true}).decode(buffer);await importBook(text,file.name);}catch(error){$('import-error').textContent=error instanceof TypeError?'無法用這種編碼讀取。請換一種編碼，再選擇檔案。':error.message;$('import-error').hidden=false;$('book-file').value='';}});
 $('earlier-text').addEventListener('click',()=>{windowStart=Math.max(0,windowStart-65);renderText();});$('later-text').addEventListener('click',()=>{windowStart=Math.min(book.chapters[player.pos.chapter].segments.length-1,windowStart+65);renderText();});
 // A hidden tab or minimized window can keep reading when the browser supports
 // it. Visibility changes never pause, restart or enqueue speech. Navigation
 // still stops the session; user pause/stop and the interruption guard remain.
-document.addEventListener('visibilitychange',()=>{if(document.hidden)clearPreview();else{refreshVoices();markSegment();}persist();});window.addEventListener('pagehide',()=>{player.pause();clearPreview();persist();});window.speechSynthesis?.addEventListener?.('voiceschanged',refreshVoices);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)clearPreview();else{refreshVoices();markSegment();}persist();});window.addEventListener('pagehide',()=>{cancelMatters(false);player.pause();clearPreview();persist();});window.speechSynthesis?.addEventListener?.('voiceschanged',refreshVoices);
 // Optional browser agent hooks use exactly the visible actions. No content-reading
 // tool is exposed, so using the reader doesn't invite an agent to copy book text.
 try{const context=document.modelContext;if(context?.registerTool){const lifecycle=new AbortController();Promise.resolve(context.registerTool({name:'reader_go_to_chapter',description:'Move this reader to a numbered chapter and pause reading.',inputSchema:{type:'object',properties:{chapter:{type:'integer',minimum:1}},required:['chapter'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute:input=>{if(!Number.isInteger(input?.chapter)||input.chapter<1||input.chapter>book.chapters.length)throw new Error('Invalid chapter');player.pause();seek({chapter:input.chapter-1,segment:0});return{chapter:input.chapter,state:player.state};}},{signal:lifecycle.signal})).catch(()=>{});window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});}}catch{}

@@ -7,8 +7,8 @@
   <title>聽頁 · 中文朗讀</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23314438'/%3E%3Cpath d='M16 18h13c5 0 7 3 7 6v26c-3-4-7-5-20-5zm32 0H35v25c5-2 8-2 13-2z' fill='%23f5f3eb'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./enhancements.css?v=20261018-1">
-  <script type="module" src="./app.js?v=20261019-1"></script>
+  <link rel="stylesheet" href="./enhancements.css?v=20261024-1">
+  <script type="module" src="./app.js?v=20261024-1"></script>
 </head>
 <body>
   <header class="topbar">
@@ -25,6 +25,7 @@
       <div class="book-actions"><button class="text-button danger-button" id="delete-book" hidden>刪除這本書</button></div>
       <h1 id="book-title">雨到窗前</h1>
       <p class="book-meta" id="book-meta">原創短篇示範</p>
+      <p class="article-source small-note" id="article-source" hidden></p>
       <div class="book-progress"><span id="overall-progress">0%</span><span>全書進度</span><div class="progress-track"><div id="progress-fill"></div></div></div>
       <div class="chapters-label">章節 <span id="chapter-count"></span></div>
       <nav id="chapter-list" aria-label="選擇章節"></nav>
@@ -53,7 +54,16 @@
   </section>
   <div id="notice" class="notice" role="status" hidden></div>
   <dialog id="import-dialog"><div class="dialog-heading"><div><span class="eyebrow">打開一個故事</span><h2>匯入書本</h2></div><button class="plain close-dialog" aria-label="關閉">✕</button></div>
-    <p class="muted">選擇 TXT／純文字 Markdown，或直接貼上文字。內容不會上傳至伺服器。</p>
+    <p class="muted">選擇 TXT／純文字 Markdown，或直接貼上文字。檔案同貼上內容不會上傳至伺服器。</p>
+    <section class="matters-import" aria-labelledby="matters-heading">
+      <h3 id="matters-heading">Matters 公開文章</h3>
+      <label class="field-label" for="matters-url">文章連結</label>
+      <input id="matters-url" type="url" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="2048" placeholder="https://matters.town/a/…" aria-describedby="matters-help matters-status">
+      <p class="small-note" id="matters-help">只支援毋須登入嘅公開文章。只匯入文字，保留作者、來源同授權資料；圖片、留言及排版不會匯入。連結會交畀文章服務讀取，文章只儲存在呢個瀏覽器。</p>
+      <p class="small-note" id="matters-status" role="status" aria-live="polite"></p>
+      <p class="inline-error" id="matters-error" role="alert" hidden></p>
+      <div class="matters-actions"><button class="secondary-button" id="import-matters" type="button">匯入公開文章</button><button class="text-button" id="cancel-matters" type="button" hidden>取消讀取</button></div>
+    </section>
     <label class="file-drop" for="book-file"><span class="upload-symbol" aria-hidden="true">↥</span><strong>選擇文字檔案</strong><span>TXT、MD · 最大 20 MB</span></label><input id="book-file" type="file" accept=".txt,.md,text/plain,text/markdown" hidden>
     <label class="field-label" for="encoding">檔案編碼 <span>出現亂碼時可更改</span></label><select id="encoding"><option value="utf-8">UTF-8（建議）</option><option value="big5">Big5（繁體中文）</option><option value="gb18030">GB18030／GBK（簡體中文）</option></select>
     <div class="or-divider"><span>或貼上文字</span></div>
